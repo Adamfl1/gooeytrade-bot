@@ -1,0 +1,16 @@
+# Session files (SECRET — do not commit)
+session.json
+tv_session.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Verify temp file
+verify_candles.csv
+
+# Debug / dev files
+debug_*.py
+debug_*.png
+.playwright-mcp/

@@ -1,0 +1,76 @@
+name: GooeyTrade Bot
+
+on:
+  schedule:
+    # Run every 5 minutes, Monday-Friday only
+    - cron: '*/5 * * * 1-5'
+  workflow_dispatch:
+    inputs:
+      live:
+        description: 'Execute live trades'
+        required: false
+        default: 'false'
+        type: boolean
+      volume:
+        description: 'Lot size'
+        required: false
+        default: '0.01'
+        type: string
+
+env:
+  # Cron schedule → LIVE by default. Manual dispatch → DRY unless live=true
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.live != 'true' }}
+  TRADE_VOLUME: ${{ github.event.inputs.volume || '0.01' }}
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Decode session files
+        run: |
+          # Decode TradingView session
+          if [ -n "${{ secrets.TV_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.TV_SESSION_BASE64 }}" | base64 -d > tv_session.json
+            echo "TV session decoded"
+          else
+            echo "No TV session secret found"
+          fi
+
+          # Decode GooeyTrade session
+          if [ -n "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" | base64 -d > session.json
+            echo "GooeyTrade session decoded"
+          else
+            echo "No GooeyTrade session secret found"
+          fi
+
+      - name: Run bot
+        run: |
+          python run.py --live --yes
+        env:
+          TV_CHART_URL: ${{ secrets.TV_CHART_URL }}
+
+      - name: Commit state
+        if: always()
+        run: |
+          git config user.name "gooeytrade-bot"
+          git config user.email "gooeytrade-bot@local"
+          git add bot_state.json candles.csv pending_sl.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "bot: state update $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push || true
