@@ -143,13 +143,13 @@ def main():
         sys.exit(1)
 
     # ── Step 5: Open market BUY order ──
-    step("Open Market BUY Order (0.01 lot)")
+    step("Open Market BUY Order (2.5 lot)")
     t = time.time()
 
     if dry_run:
         log("DRY RUN - filling form only, not submitting")
         open_advanced_order(page)
-        _type_in_stepper(page, SEL_VOLUME_CONTAINER, 0.01)
+        _type_in_stepper(page, SEL_VOLUME_CONTAINER, 2.5)
         btn = page.locator(SEL_BUY_BTN)
         btn_text = btn.inner_text(timeout=3000)
         log(f"Button text: {btn_text.split(chr(10))[0]}")
@@ -157,7 +157,7 @@ def main():
     else:
         try:
             open_advanced_order(page)
-            _type_in_stepper(page, SEL_VOLUME_CONTAINER, 0.01)
+            _type_in_stepper(page, SEL_VOLUME_CONTAINER, 2.5)
             time.sleep(1)
 
             log(f"Submitting BUY market order @ ~{btc_price:.2f}...")
