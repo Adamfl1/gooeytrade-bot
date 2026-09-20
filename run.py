@@ -38,6 +38,7 @@ from tv_scraper import scrape_chart, parse_entry_label, parse_tp_sl_labels, pars
 from state import (
     has_traded, record_trade, get_trade_count,
     add_pending_tp_sl, get_pending_tp_sl, remove_pending_tp_sl,
+    get_signal_first_seen, record_signal_first_seen,
 )
 from execution import execute_market_order
 
@@ -200,13 +201,32 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
 
     print(f"\n  [Phase A] Entry signal: {direction.upper()} @ {entry_price:.2f}")
 
+    # Check OCR freshness status (Pine Script sends FRESH/OLD)
+    signal_status = raw.get("signal_table", {}).get("status", "")
+    if signal_status == "old":
+        print("  [Phase A] Signal status: OLD (>120s) — skipping")
+        return False
+    elif signal_status == "fresh":
+        print("  [Phase A] Signal status: FRESH (<120s)")
+    elif signal_status:
+        print(f"  [Phase A] Signal status: {signal_status}")
+
     # Get current price to check freshness — FAIL CLOSED if unreadable
-    try:
-        buy_btn = page.locator('[data-testid="order-panel-buy-button"]')
-        price_el = buy_btn.locator(".ui-order-button__price")
-        current_price = float(price_el.inner_text(timeout=3000).replace(",", ""))
-    except Exception as e:
-        print(f"  [Phase A] Could not read live price from GooeyTrade — rejecting signal as precaution: {e}")
+    current_price = 0
+    for attempt in range(5):
+        try:
+            buy_btn = page.locator('[data-testid="order-panel-buy-button"]')
+            price_el = buy_btn.locator(".ui-order-button__price")
+            price_text = price_el.inner_text(timeout=5000)
+            if price_text.strip():
+                current_price = float(price_text.replace(",", ""))
+                break
+        except Exception:
+            pass
+        time.sleep(1)
+
+    if current_price == 0:
+        print("  [Phase A] Could not read live price from GooeyTrade — rejecting signal as precaution")
         return False
 
     print(f"  [Phase A] Current price: {current_price:.2f}")
@@ -217,9 +237,23 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
         print(f"  [Phase A] Signal too old (price {distance_pct:.2f}% away from current) — skipping")
         return False
 
+    # Time-based freshness check: reject signals older than 120 seconds
+    from datetime import datetime, timezone
+    signal_key = f"tv_{entry_price}_{direction}"
+    now = datetime.now(timezone.utc)
+    first_seen = get_signal_first_seen(signal_key)
+    if first_seen:
+        age_seconds = (now - first_seen).total_seconds()
+        if age_seconds > 120:
+            print(f"  [Phase A] Signal too old ({age_seconds:.0f}s > 120s) — skipping")
+            return False
+        print(f"  [Phase A] Signal age: {age_seconds:.0f}s (max 120s)")
+    else:
+        record_signal_first_seen(signal_key, now)
+        print(f"  [Phase A] Signal first seen — 120s timer started")
+
     # Check for duplicate
-    signal_time = f"tv_{entry_price}_{direction}"
-    if has_traded(signal_time, direction):
+    if has_traded(signal_key, direction):
         print(f"  [Phase A] Already traded {direction.upper()} at {entry_price} — skipping.")
         return False
 
@@ -232,7 +266,8 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
 
     if dry_run:
         print("  [DRY RUN] Would open trade — skipping execution")
-        # Record so we don't re-trade
+        from datetime import datetime, timezone
+        signal_time = datetime.now(timezone.utc).isoformat()
         record_trade(
             signal_time=signal_time,
             direction=direction,
@@ -263,6 +298,8 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
 
     if live_price > 0:
         print(f"\n  Trade opened. Live price: {live_price:.2f}")
+        from datetime import datetime, timezone
+        signal_time = datetime.now(timezone.utc).isoformat()
         record_trade(
             signal_time=signal_time,
             direction=direction,
@@ -310,8 +347,10 @@ def main():
         if raw:
             entry = parse_entry_label(raw)
             tpsl = parse_tp_sl_labels(raw)
+            sig = parse_signal(raw)
             print(f"\n  Entry signal: {entry}")
             print(f"  SL/TP labels: {tpsl}")
+            print(f"  Signal status: {sig['status'] if sig else 'unknown'}")
             print(f"  All labels: {raw.get('labels', [])}")
         else:
             print("\n  No data scraped.")
@@ -334,14 +373,23 @@ def main():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=is_ci)
-        context = browser.new_context(storage_state=str(SESSION_FILE))
+        context = browser.new_context(
+            storage_state=str(SESSION_FILE),
+            ignore_https_errors=True,
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/125.0.0.0 Safari/537.36"
+            ),
+            viewport={"width": 1920, "height": 1080},
+        )
         page = context.new_page()
-        page.goto(GOOEYTRADE_URL)
+        page.goto(GOOEYTRADE_URL, timeout=60000)
 
         try:
             page.wait_for_selector(
                 '[data-testid="order-panel-buy-button"]',
-                timeout=15000,
+                timeout=30000,
             )
         except Exception:
             print("  ERROR: Trade page did not load. Session may be expired.")
