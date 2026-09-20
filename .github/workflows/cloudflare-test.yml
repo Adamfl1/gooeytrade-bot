@@ -1,0 +1,142 @@
+name: Cloudflare Block Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-screenshots:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install playwright pytesseract Pillow
+          playwright install chromium --with-deps
+
+      - name: Decode TradingView session
+        run: |
+          echo "${{ secrets.TV_SESSION_BASE64 }}" | base64 -d > tv_session.json
+
+      - name: Decode GooeyTrade session
+        run: |
+          echo "${{ secrets.SESSION_BASE64 }}" | base64 -d > session.json
+
+      - name: Screenshot TradingView
+        run: |
+          python -c "
+          import time
+          from playwright.sync_api import sync_playwright
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              context = browser.new_context(
+                  storage_state='tv_session.json',
+                  ignore_https_errors=True,
+                  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+                  viewport={'width': 1920, 'height': 1080},
+              )
+              page = context.new_page()
+              page.goto('https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD', timeout=60000)
+
+              # Wait for canvas (chart) to appear
+              try:
+                  page.wait_for_selector('canvas', timeout=30000)
+                  print('Canvas found — chart loaded')
+              except:
+                  print('WARNING: canvas not found — may be blocked')
+
+              # Extra wait for Pine Script to render
+              time.sleep(15)
+
+              # Check page title and URL for signs of block
+              title = page.title()
+              url = page.url
+              print(f'Page title: {title}')
+              print(f'Page URL: {url}')
+
+              # Check for Cloudflare challenge indicators
+              body_text = page.inner_text('body')[:2000]
+              if 'checking your browser' in body_text.lower() or 'cloudflare' in body_text.lower():
+                  print('CLOUDFLARE BLOCK DETECTED')
+              elif 'captcha' in body_text.lower():
+                  print('CAPTCHA DETECTED')
+              else:
+                  print('No Cloudflare block detected in body text')
+
+              page.screenshot(path='screenshot_tradingview.png', full_page=True)
+              print('Saved screenshot_tradingview.png')
+              browser.close()
+          "
+
+      - name: Screenshot GooeyTrade
+        run: |
+          python -c "
+          import time
+          from playwright.sync_api import sync_playwright
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              context = browser.new_context(
+                  storage_state='session.json',
+                  ignore_https_errors=True,
+                  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+                  viewport={'width': 1920, 'height': 1080},
+              )
+              page = context.new_page()
+              page.goto('https://mtr.gooeytrade.com/app/trade', timeout=60000)
+
+              # Wait for trade page
+              try:
+                  page.wait_for_selector('[data-testid=\"order-panel-buy-button\"]', timeout=30000)
+                  print('Trade page loaded — buy button found')
+              except:
+                  print('WARNING: buy button not found — may be blocked or session expired')
+
+              time.sleep(5)
+
+              title = page.title()
+              url = page.url
+              print(f'Page title: {title}')
+              print(f'Page URL: {url}')
+
+              body_text = page.inner_text('body')[:2000]
+              if 'checking your browser' in body_text.lower() or 'cloudflare' in body_text.lower():
+                  print('CLOUDFLARE BLOCK DETECTED')
+              elif 'captcha' in body_text.lower():
+                  print('CAPTCHA DETECTED')
+              else:
+                  print('No Cloudflare block detected in body text')
+
+              page.screenshot(path='screenshot_gooeytrade.png', full_page=True)
+              print('Saved screenshot_gooeytrade.png')
+              browser.close()
+          "
+
+      - name: Upload TradingView screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-tradingview
+          path: screenshot_tradingview.png
+
+      - name: Upload GooeyTrade screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-gooeytrade
+          path: screenshot_gooeytrade.png
+
+      - name: Print summary
+        run: |
+          echo "=== DONE ==="
+          echo "Download the artifacts from the workflow run to view screenshots."
+          echo "TradingView screenshot: screenshot_tradingview.png"
+          echo "GooeyTrade screenshot: screenshot_gooeytrade.png"
