@@ -106,3 +106,47 @@ def cleanup_old(days: int = 30) -> int:
     ]
     _save(data)
     return original - len(data["trades"])
+
+
+# ── Signal freshness tracking (120s timeout) ────────────────────────────────
+
+def get_signal_first_seen(signal_key: str) -> datetime | None:
+    """Get when a signal was first seen. Returns None if new."""
+    data = _load()
+    first_seen_str = data.get("signal_first_seen", {}).get(signal_key)
+    if first_seen_str:
+        dt = datetime.fromisoformat(first_seen_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    return None
+
+
+def record_signal_first_seen(signal_key: str, when: datetime) -> None:
+    """Record when a signal was first seen."""
+    data = _load()
+    if "signal_first_seen" not in data:
+        data["signal_first_seen"] = {}
+    data["signal_first_seen"][signal_key] = when.isoformat()
+    _save(data)
+
+
+def cleanup_old_signals(max_age_seconds: int = 300) -> int:
+    """Remove signal timestamps older than N seconds. Returns count removed."""
+    data = _load()
+    first_seen = data.get("signal_first_seen", {})
+    if not first_seen:
+        return 0
+    now = datetime.now(timezone.utc)
+    to_remove = []
+    for key, ts_str in first_seen.items():
+        dt = datetime.fromisoformat(ts_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        if (now - dt).total_seconds() > max_age_seconds:
+            to_remove.append(key)
+    for key in to_remove:
+        del first_seen[key]
+    if to_remove:
+        _save(data)
+    return len(to_remove)
