@@ -118,15 +118,23 @@ def main():
 
     # ── Step 4: Read BTC price ──
     step("Read BTC Price")
-    buy_btn = page.locator(SEL_BUY_BTN)
-    price_el = buy_btn.locator(".ui-order-button__price")
-    try:
-        price_text = price_el.inner_text(timeout=8000)
-        btc_price = float(price_text.replace(",", ""))
-        log(f"BTC price: {btc_price:.2f}")
-    except Exception as e:
-        log(f"Could not read BTC price: {e}", "ERROR")
-        btc_price = 0
+    btc_price = 0
+    for attempt in range(5):
+        try:
+            buy_btn = page.locator('[data-testid="order-panel-buy-button"]')
+            buy_btn.wait_for(state="visible", timeout=10000)
+            price_el = buy_btn.locator(".ui-order-button__price")
+            price_text = price_el.inner_text(timeout=5000)
+            if price_text.strip():
+                btc_price = float(price_text.replace(",", ""))
+                log(f"BTC price: {btc_price:.2f} (attempt {attempt+1})")
+                break
+        except Exception as e:
+            log(f"Price read attempt {attempt+1} failed: {e}", "WARN")
+            time.sleep(2)
+    if btc_price == 0:
+        page.screenshot(path="debug_btc_price_fail.png")
+        log("Could not read BTC price after 5 attempts", "ERROR")
 
     if btc_price == 0:
         log("Cannot proceed without BTC price", "ERROR")
