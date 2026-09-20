@@ -55,11 +55,11 @@ jobs:
 
       - name: Decode GooeyTrade session
         run: |
-          if [ -n "${{ secrets.SESSION_BASE64 }}" ]; then
-            echo "${{ secrets.SESSION_BASE64 }}" | base64 -d > session.json
+          if [ -n "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" | base64 -d > session.json
             echo "Session decoded OK"
           else
-            echo "SESSION_BASE64 secret is empty - creating empty session"
+            echo "GOOEYTRADE_SESSION_BASE64 secret is empty - creating empty session"
             echo '{"cookies":[],"origins":[]}' > session.json
           fi
 
