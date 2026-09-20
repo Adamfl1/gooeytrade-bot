@@ -1,4 +1,4 @@
-"""Test Phase B: check if we can find open positions and edit SL/TP."""
+"""Test Phase B: debug TPSL dialog opening."""
 import time
 from playwright.sync_api import sync_playwright
 
@@ -18,64 +18,52 @@ with sync_playwright() as p:
         print("OK: Trade page loaded")
     except Exception:
         print("FAIL: Trade page did not load")
-        page.screenshot(path="debug_phase_b.png")
         browser.close()
         exit(1)
 
-    time.sleep(3)
+    time.sleep(5)
 
-    # Check for open positions
+    # Find open positions
     positions = page.locator('[data-testid="open-positions-desktop-list-row"]')
     pos_count = positions.count()
-    print(f"\nOpen positions found: {pos_count}")
+    print(f"Open positions: {pos_count}")
 
     if pos_count > 0:
-        for i in range(pos_count):
-            row = positions.nth(i)
-            # Read direction badge
-            badges = row.locator(".ui-badge")
-            for bi in range(badges.count()):
-                text = badges.nth(bi).inner_text(timeout=2000).strip()
-                print(f"  Position {i}: badge = {text}")
-            # Read volume
-            vol_el = row.locator('[data-testid="open-position-volume"]')
-            if vol_el.count() > 0:
-                print(f"  Position {i}: volume = {vol_el.inner_text(timeout=2000).strip()}")
-            # Try clicking TPSL button
-            tpsl_btn = row.locator('[data-testid="open-positions-desktop-tpsl-btn"]')
-            if tpsl_btn.count() > 0:
-                print(f"  Position {i}: TPSL button found - clicking...")
-                tpsl_btn.click()
-                time.sleep(2)
-                # Check if edit dialog appeared
-                dialog = page.locator('[data-testid="trade-open-position-tp-sl-edit"]')
-                if dialog.count() > 0 and dialog.is_visible():
-                    print(f"  Position {i}: SL/TP EDIT DIALOG OPENED SUCCESSFULLY")
-                    # Check toggles
-                    toggles = dialog.locator('[data-testid="tp-sl-toggle-header-element"]')
-                    print(f"  Position {i}: Toggle count = {toggles.count()}")
-                    # Close dialog
-                    cancel = page.locator('[data-testid="position-edit-dialog-cancel-btn"]')
-                    if cancel.count() > 0:
-                        cancel.click()
-                        time.sleep(1)
-                else:
-                    print(f"  Position {i}: SL/TP dialog did NOT appear")
-    else:
-        print("No open positions. Checking pending orders...")
-        # Check pending orders tab
-        try:
-            page.get_by_text("Pending Orders", exact=True).click()
-            time.sleep(2)
-            empty = page.locator('[data-testid="empty-pending-orders-disclaimer"]')
-            if empty.count() > 0:
-                print("No pending orders either.")
-            else:
-                print("Pending orders found!")
-        except Exception as e:
-            print(f"Could not check pending orders: {e}")
+        row = positions.first
+        print("Clicking TPSL button on first position...")
+        tpsl_btn = row.locator('[data-testid="open-positions-desktop-tpsl-btn"]')
+        print(f"TPSL button count: {tpsl_btn.count()}")
+        print(f"TPSL button visible: {tpsl_btn.is_visible()}")
+        tpsl_btn.click()
+        
+        # Wait longer and check for dialog
+        print("Waiting 5 seconds for dialog...")
+        time.sleep(5)
+        
+        page.screenshot(path="debug_tpsl_after_click.png")
+        
+        # Check for dialog with various selectors
+        for sel in [
+            '[data-testid="trade-open-position-tp-sl-edit"]',
+            '[data-testid="position-edit-dialog"]',
+            '.modal',
+            '[role="dialog"]',
+            '[data-testid="tp-sl-edit"]',
+        ]:
+            el = page.locator(sel)
+            cnt = el.count()
+            vis = el.is_visible() if cnt > 0 else False
+            print(f"  Selector '{sel}': count={cnt}, visible={vis}")
+        
+        # Also check if there are any overlays/modals
+        overlays = page.locator('.overlay, .modal, [role="dialog"], [data-testid*="dialog"], [data-testid*="modal"]')
+        print(f"\nOverlay/modal elements found: {overlays.count()}")
+        for i in range(min(overlays.count(), 5)):
+            ov = overlays.nth(i)
+            tag = ov.evaluate("el => el.tagName")
+            testid = ov.get_attribute("data-testid") or "none"
+            cls = ov.get_attribute("class") or "none"
+            print(f"  [{i}] <{tag}> data-testid={testid} class={cls[:80]}")
 
-    # Take a screenshot for evidence
-    page.screenshot(path="debug_phase_b.png")
-    print("\nScreenshot saved: debug_phase_b.png")
     browser.close()
+    print("\nDone.")
