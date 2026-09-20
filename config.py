@@ -22,7 +22,7 @@ SESSION_FILE = Path(os.environ.get("SESSION_FILE", "session.json"))
 
 # ── Trade parameters ─────────────────────────────────────────────────────────
 
-DEFAULT_VOLUME = float(os.environ.get("TRADE_VOLUME", "0.01"))
+DEFAULT_VOLUME = float(os.environ.get("TRADE_VOLUME", "2.5"))
 RR_RATIO = 3.0  # risk:reward ratio for TP
 
 # ── Timing ───────────────────────────────────────────────────────────────────

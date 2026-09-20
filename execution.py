@@ -19,7 +19,7 @@ from signal_detector import Signal
 SESSION_FILE = Path("session.json")
 GOOEYTRADE_URL = "https://mtr.gooeytrade.com/app/trade"
 PENDING_SL_FILE = Path("pending_sl.json")
-DEFAULT_VOLUME = 0.01
+DEFAULT_VOLUME = 2.5
 
 # Selectors
 SEL_ADVANCED_ORDER_BTN = '[data-testid="advanced-order-button"]'
