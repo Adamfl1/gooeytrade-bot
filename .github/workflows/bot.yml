@@ -1,6 +1,8 @@
 name: GooeyTrade Bot
 
 on:
+  schedule:
+    - cron: '*/5 * * * 1-5'
   workflow_dispatch:
     inputs:
       live:
@@ -15,7 +17,8 @@ on:
         type: string
 
 env:
-  DRY_RUN: ${{ github.event.inputs.live != 'true' }}
+  # Cron → DRY by default (safe). Manual dispatch → DRY unless live=true
+  DRY_RUN: ${{ github.event.schedule != '' || github.event.inputs.live != 'true' }}
   TRADE_VOLUME: ${{ github.event.inputs.volume || '0.01' }}
 
 jobs:
