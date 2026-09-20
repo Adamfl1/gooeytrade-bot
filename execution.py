@@ -45,7 +45,7 @@ SEL_POSITION_VOLUME = '[data-testid="open-position-volume"]'
 SEL_POSITION_TPSL_BTN = '[data-testid="open-positions-desktop-tpsl-btn"]'
 
 # Position edit dialog (SL/TP)
-SEL_POSITION_EDIT_DIALOG = '[data-testid="trade-open-position-tp-sl-edit"]'
+SEL_POSITION_EDIT_DIALOG = '[data-testid="dialog-wrapper"]'
 SEL_POSITION_EDIT_TOGGLE = '[data-testid="tp-sl-toggle-header-element"]'
 SEL_POSITION_EDIT_VALUE = '[data-testid="tp-sl-value-input"]'
 SEL_POSITION_EDIT_SAVE = '[data-testid="position-edit-dialog-save-btn"]'
