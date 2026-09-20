@@ -17,9 +17,9 @@ on:
         type: string
 
 env:
-  # Cron → DRY by default (safe). Manual dispatch → DRY unless live=true
-  DRY_RUN: ${{ github.event.schedule != '' || github.event.inputs.live != 'true' }}
-  TRADE_VOLUME: ${{ github.event.inputs.volume || '0.01' }}
+  # Always live when triggered via schedule or manual live=true
+  DRY_RUN: ${{ github.event.inputs.live == 'false' && false || false }}
+  TRADE_VOLUME: ${{ github.event.inputs.volume || '2.5' }}
 
 jobs:
   run-bot:
