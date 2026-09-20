@@ -1,6 +1,7 @@
 # Session files (SECRET — do not commit)
 session.json
 tv_session.json
+session_trimmed.json
 
 # Python
 __pycache__/

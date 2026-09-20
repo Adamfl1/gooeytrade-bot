@@ -1,15 +1,12 @@
 name: GooeyTrade Bot
 
 on:
-  schedule:
-    # Run every 5 minutes, Monday-Friday only
-    - cron: '*/5 * * * 1-5'
   workflow_dispatch:
     inputs:
       live:
         description: 'Execute live trades'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       volume:
         description: 'Lot size'
@@ -18,8 +15,7 @@ on:
         type: string
 
 env:
-  # Cron schedule → LIVE by default. Manual dispatch → DRY unless live=true
-  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.live != 'true' }}
+  DRY_RUN: ${{ github.event.inputs.live != 'true' }}
   TRADE_VOLUME: ${{ github.event.inputs.volume || '0.01' }}
 
 jobs:
@@ -38,7 +34,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
