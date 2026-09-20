@@ -1,0 +1,99 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © GooeyTrade Bot — EMA200 Bias + Supertrend Flip Entry
+// Outputs signals via table.new() so the scraper can read them from DOM.
+
+//@version=5
+strategy("EMA200 Bias + Supertrend Flip Entry", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=1)
+
+// ── Inputs ──────────────────────────────────────────────────────────────────
+ema_len      = input.int(200, "EMA Length")
+st_period    = input.int(10, "Supertrend Period")
+st_mult      = input.float(3.0, "Supertrend Multiplier")
+atr_len      = input.int(14, "ATR Length")
+atr_factor   = input.float(1.5, "ATR Factor")
+rr_ratio     = input.float(3.0, "Risk:Reward Ratio")
+
+// ── Indicators ──────────────────────────────────────────────────────────────
+ema200 = ta.ema(close, ema_len)
+[supertrend, st_dir] = ta.supertrend(st_mult, st_period)
+atr_val = ta.rma(ta.tr(true), atr_len) * atr_factor
+
+// ── Supertrend flip detection ───────────────────────────────────────────────
+st_dir_prev = st_dir[1]
+flipped_up   = st_dir_prev == -1 and st_dir == 1
+flipped_down = st_dir_prev == 1  and st_dir == -1
+
+// ── Entry conditions (EMA200 bias filter) ──────────────────────────────────
+buy_signal  = flipped_up   and close > ema200
+sell_signal = flipped_down and close < ema200
+
+// ── Compute SL/TP on the entry candle (next bar open) ──────────────────────
+var float entry_price = na
+var float sl_price    = na
+var float tp_price    = na
+var int   signal_bar  = na
+var string signal_dir = na
+
+if buy_signal
+    entry_price := open[0]
+    sl_price    := low[0]  - atr_val
+    tp_price    := entry_price + (entry_price - sl_price) * rr_ratio
+    signal_bar  := bar_index
+    signal_dir  := "BUY"
+    strategy.entry("BUY", strategy.long)
+
+if sell_signal
+    entry_price := open[0]
+    sl_price    := high[0] + atr_val
+    tp_price    := entry_price - (sl_price - entry_price) * rr_ratio
+    signal_bar  := bar_index
+    signal_dir  := "SELL"
+    strategy.entry("SELL", strategy.short)
+
+// ── Table output (DOM-readable by scraper) ──────────────────────────────────
+var table sigTable = table.new(position.top_right, 2, 4, bgcolor=color.new(color.black, 80), border_width=1)
+
+if barstate.islast
+    // Always clear first
+    table.clear(sigTable, 0, 0, 1, 3)
+
+    if not na(signal_dir) and not na(entry_price) and not na(sl_price) and not na(tp_price)
+        // Row 0: Direction + Entry
+        table.cell(sigTable, 0, 0, signal_dir, text_color=color.white, text_size=size.normal)
+        table.cell(sigTable, 1, 0, str.tostring(entry_price, format.mintick), text_color=color.white, text_size=size.normal)
+
+        // Row 1: SL
+        table.cell(sigTable, 0, 1, "SL", text_color=color.red, text_size=size.normal)
+        table.cell(sigTable, 1, 1, str.tostring(sl_price, format.mintick), text_color=color.red, text_size=size.normal)
+
+        // Row 2: TP
+        table.cell(sigTable, 0, 2, "TP", text_color=color.teal, text_size=size.normal)
+        table.cell(sigTable, 1, 2, str.tostring(tp_price, format.mintick), text_color=color.teal, text_size=size.normal)
+
+        // Row 3: FRESH / OLD status (120s expiry)
+        seconds_since = (time - signal_bar) / 1000
+        is_fresh = seconds_since <= 120
+        status_text = is_fresh ? "FRESH" : "OLD"
+        status_bg   = is_fresh ? color.green : color.new(color.red, 40)
+        table.cell(sigTable, 0, 3, status_text, text_color=color.white, bgcolor=status_bg, text_size=size.normal)
+    else
+        // No active signal
+        table.cell(sigTable, 0, 0, "No Signal", text_color=color.gray, text_size=size.normal)
+        table.cell(sigTable, 1, 0, "-", text_color=color.gray, text_size=size.normal)
+
+// ── Visual labels on chart (canvas — for your reference) ────────────────────
+if buy_signal
+    label.new(bar_index, low, "BUY " + str.tostring(entry_price, format.mintick),
+              color=color.green, textcolor=color.white, style=label.style_label_up, size=size.small)
+    label.new(bar_index, sl_price, "SL " + str.tostring(sl_price, format.mintick),
+              color=color.red, textcolor=color.white, style=label.style_label_up, size=size.tiny)
+    label.new(bar_index, tp_price, "TP " + str.tostring(tp_price, format.mintick),
+              color=color.teal, textcolor=color.white, style=label.style_label_down, size=size.tiny)
+
+if sell_signal
+    label.new(bar_index, high, "SELL " + str.tostring(entry_price, format.mintick),
+              color=color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+    label.new(bar_index, sl_price, "SL " + str.tostring(sl_price, format.mintick),
+              color=color.red, textcolor=color.white, style=label.style_label_down, size=size.tiny)
+    label.new(bar_index, tp_price, "TP " + str.tostring(tp_price, format.mintick),
+              color=color.teal, textcolor=color.white, style=label.style_label_up, size=size.tiny)
