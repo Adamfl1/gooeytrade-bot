@@ -1,0 +1,64 @@
+name: Test GooeyTrade IP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Decode session
+        run: |
+          if [ -n "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" | base64 -d > session.json
+            echo "Session decoded"
+          else
+            echo "No session secret"
+          fi
+
+      - name: Test GooeyTrade page load
+        run: |
+          python -c "
+          import time
+          from playwright.sync_api import sync_playwright
+
+          p = sync_playwright().start()
+          b = p.chromium.launch(headless=True)
+          ctx = b.new_context(
+              storage_state='session.json',
+              user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+              viewport={'width': 1920, 'height': 1080},
+          )
+          page = ctx.new_page()
+          page.goto('https://mtr.gooeytrade.com/app/trade', timeout=60000)
+          time.sleep(10)
+          title = page.title()
+          url = page.url
+          print(f'URL: {url}')
+          print(f'Title: {title}')
+
+          if 'moment' in title.lower() or 'cloudflare' in title.lower():
+              print('RESULT: BLOCKED by Cloudflare')
+          elif page.locator('[data-testid=\"order-panel-buy-button\"]').count() > 0:
+              print('RESULT: SUCCESS - Trade page loaded, buy button visible')
+          else:
+              print('RESULT: UNKNOWN - Page loaded but no buy button')
+              page.screenshot(path='debug_ci.png')
+
+          b.close()
+          p.stop()
+          "
