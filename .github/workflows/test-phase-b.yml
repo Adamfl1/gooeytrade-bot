@@ -1,0 +1,46 @@
+﻿name: Test Phase B (SL/TP)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Decode session files
+        run: |
+          if [ -n "${{ secrets.TV_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.TV_SESSION_BASE64 }}" | base64 -d > tv_session.json
+          fi
+          if [ -n "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" ]; then
+            echo "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" | base64 -d > session.json
+          fi
+
+      - name: Test Phase B - check positions & SL/TP dialog
+        run: python test_phase_b.py
+        env:
+          TV_CHART_URL: ${{ secrets.TV_CHART_URL }}
+          DRY_RUN: 'false'
