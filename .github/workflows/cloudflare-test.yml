@@ -26,53 +26,7 @@ jobs:
         run: echo "${{ secrets.TV_SESSION_BASE64 }}" | base64 -d > tv_session.json
 
       - name: Screenshot TradingView
-        run: |
-          python -c "
-          import time, json
-          from playwright.sync_api import sync_playwright
-
-          with sync_playwright() as p:
-              browser = p.chromium.launch(headless=True)
-              context = browser.new_context(
-                  storage_state='tv_session.json',
-                  ignore_https_errors=True,
-                  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-                  viewport={'width': 1920, 'height': 1080},
-              )
-              page = context.new_page()
-              page.goto('https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD', timeout=60000)
-
-              try:
-                  page.wait_for_selector('canvas', timeout=30000)
-                  print('OK: Canvas found — chart loaded')
-              except:
-                  print('WARN: canvas not found')
-
-              time.sleep(15)
-
-              title = page.title()
-              url = page.url
-              body_text = page.inner_text('body')[:3000]
-
-              print(f'Page title: {title}')
-              print(f'Page URL: {url}')
-
-              if 'checking your browser' in body_text.lower() or 'cloudflare' in body_text.lower():
-                  print('RESULT: CLOUDFLARE BLOCK DETECTED')
-              elif 'captcha' in body_text.lower():
-                  print('RESULT: CAPTCHA DETECTED')
-              elif 'just a moment' in body_text.lower():
-                  print('RESULT: CLOUDFLARE "JUST A MOMENT" PAGE')
-              else:
-                  print('RESULT: NO BLOCK DETECTED — page loaded normally')
-
-              # Print first 500 chars of body for diagnosis
-              print(f'Body preview: {body_text[:500]}')
-
-              page.screenshot(path='screenshot_tradingview.png', full_page=True)
-              print('Saved screenshot_tradingview.png')
-              browser.close()
-          "
+        run: python test_tv_screenshot.py
 
       - name: Upload TradingView screenshot
         uses: actions/upload-artifact@v4
@@ -105,57 +59,12 @@ jobs:
             echo "${{ secrets.SESSION_BASE64 }}" | base64 -d > session.json
             echo "Session decoded OK"
           else
-            echo "SESSION_BASE64 secret is empty — creating empty session"
+            echo "SESSION_BASE64 secret is empty - creating empty session"
             echo '{"cookies":[],"origins":[]}' > session.json
           fi
 
       - name: Screenshot GooeyTrade
-        run: |
-          python -c "
-          import time
-          from playwright.sync_api import sync_playwright
-
-          with sync_playwright() as p:
-              browser = p.chromium.launch(headless=True)
-              context = browser.new_context(
-                  storage_state='session.json',
-                  ignore_https_errors=True,
-                  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-                  viewport={'width': 1920, 'height': 1080},
-              )
-              page = context.new_page()
-              page.goto('https://mtr.gooeytrade.com/app/trade', timeout=60000)
-
-              try:
-                  page.wait_for_selector('[data-testid=\"order-panel-buy-button\"]', timeout=30000)
-                  print('OK: Trade page loaded — buy button found')
-              except:
-                  print('WARN: buy button not found')
-
-              time.sleep(5)
-
-              title = page.title()
-              url = page.url
-              body_text = page.inner_text('body')[:3000]
-
-              print(f'Page title: {title}')
-              print(f'Page URL: {url}')
-
-              if 'checking your browser' in body_text.lower() or 'cloudflare' in body_text.lower():
-                  print('RESULT: CLOUDFLARE BLOCK DETECTED')
-              elif 'captcha' in body_text.lower():
-                  print('RESULT: CAPTCHA DETECTED')
-              elif 'just a moment' in body_text.lower():
-                  print('RESULT: CLOUDFLARE "JUST A MOMENT" PAGE')
-              else:
-                  print('RESULT: NO BLOCK DETECTED — page loaded normally')
-
-              print(f'Body preview: {body_text[:500]}')
-
-              page.screenshot(path='screenshot_gooeytrade.png', full_page=True)
-              print('Saved screenshot_gooeytrade.png')
-              browser.close()
-          "
+        run: python test_gooey_screenshot.py
 
       - name: Upload GooeyTrade screenshot
         uses: actions/upload-artifact@v4
