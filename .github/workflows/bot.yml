@@ -84,6 +84,8 @@ jobs:
         run: |
           git config user.name "gooeytrade-bot"
           git config user.email "gooeytrade-bot@local"
-          git add bot_state.json candles.csv pending_sl.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "bot: state update $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          for f in bot_state.json candles.csv pending_sl.json; do
+            [ -f "$f" ] && git add "$f" || true
+          done
+          git diff --staged --quiet || git commit -m "bot: state update $(date -u %Y-%m-%dT%H:%M:%SZ)"
           git push || true

@@ -69,6 +69,7 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
     """
     pending = get_pending_tp_sl()
     if not pending:
+        print("  [Phase B] No pending trades waiting for SL/TP")
         return False
 
     # Apply to the most recent pending trade
