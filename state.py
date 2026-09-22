@@ -65,13 +65,15 @@ def get_trade_count() -> int:
 
 # ── Pending TP/SL (Phase B tracking) ────────────────────────────────────────
 
-def add_pending_tp_sl(direction: str, entry_price: float, volume: float) -> None:
-    """Record a trade that needs SL/TP applied on next candle (Phase B)."""
+def add_pending_tp_sl(direction: str, entry_price: float, volume: float, sl: float = 0, tp: float = 0) -> None:
+    """Record a trade that needs SL/TP applied (Phase B)."""
     data = _load()
     data["pending_tp_sl"].append({
         "direction": direction,
         "entry_price": entry_price,
         "volume": volume,
+        "sl": sl,
+        "tp": tp,
         "opened_at": datetime.now(timezone.utc).isoformat(),
     })
     _save(data)

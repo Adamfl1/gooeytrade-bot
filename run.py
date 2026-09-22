@@ -71,21 +71,26 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
     if not pending:
         return False
 
-    tpsl = parse_tp_sl_labels(raw)
-    if not tpsl:
-        print("  [Phase B] No SL/TP on chart yet — retrying next run")
-        return False
-
-    sl = tpsl["sl"]
-    tp = tpsl["tp"]
-    print(f"\n  [Phase B] SL/TP from chart: SL={sl:.2f}  TP={tp:.2f}")
-
     # Apply to the most recent pending trade
     trade = pending[-1]
     direction = trade["direction"]
     entry_price = trade["entry_price"]
     trade_volume = trade.get("volume", volume)
 
+    sl = trade.get("sl", 0)
+    tp = trade.get("tp", 0)
+
+    if not sl or not tp:
+        tpsl = parse_tp_sl_labels(raw)
+        if tpsl:
+            sl = tpsl["sl"]
+            tp = tpsl["tp"]
+
+    if not sl or not tp:
+        print("  [Phase B] No SL/TP values available — retrying next run")
+        return False
+
+    print(f"\n  [Phase B] SL/TP to apply: SL={sl:.2f}  TP={tp:.2f}")
     print(f"  [Phase B] Applying to: {direction.upper()} @ {entry_price:.2f}")
 
     if dry_run:
@@ -199,7 +204,11 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
     direction = entry["direction"]
     entry_price = entry["entry_price"]
 
-    print(f"\n  [Phase A] Entry signal: {direction.upper()} @ {entry_price:.2f}")
+    tpsl = parse_tp_sl_labels(raw)
+    sl = tpsl["sl"] if tpsl else 0
+    tp = tpsl["tp"] if tpsl else 0
+
+    print(f"\n  [Phase A] Entry signal: {direction.upper()} @ {entry_price:.2f} (SL: {sl}, TP: {tp})")
 
     # Check OCR freshness status (Pine Script sends FRESH/OLD)
     signal_status = raw.get("signal_table", {}).get("status", "")
@@ -272,10 +281,10 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
             signal_time=signal_time,
             direction=direction,
             entry_price=entry_price,
-            sl=0, tp=0,
+            sl=sl, tp=tp,
             volume=volume,
         )
-        add_pending_tp_sl(direction, entry_price, volume)
+        add_pending_tp_sl(direction, entry_price, volume, sl, tp)
         return True
 
     # Build signal object for execute_market_order
@@ -285,8 +294,8 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
     sig = SimpleSignal()
     sig.direction = direction
     sig.entry_price = entry_price
-    sig.sl = entry_price  # placeholder — SL/TP applied in Phase B
-    sig.tp = entry_price  # placeholder
+    sig.sl = sl
+    sig.tp = tp
 
     live_price = execute_market_order(
         signal=sig,
@@ -304,10 +313,10 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
             signal_time=signal_time,
             direction=direction,
             entry_price=live_price,
-            sl=0, tp=0,
+            sl=sl, tp=tp,
             volume=volume,
         )
-        add_pending_tp_sl(direction, live_price, volume)
+        add_pending_tp_sl(direction, live_price, volume, sl, tp)
         return True
     else:
         print("\n  Trade failed. Check output above.")
