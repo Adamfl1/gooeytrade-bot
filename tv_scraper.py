@@ -134,10 +134,13 @@ def _ocr_table(screenshot_path: str) -> dict:
 
     img = Image.open(screenshot_path)
     cropped = img.crop(TABLE_CROP)
+    cropped.save("debug_ocr_crop.png")
 
     # Run OCR
     text = pytesseract.image_to_string(cropped, config="--psm 6")
+    print(f"  [OCR] Raw text: {repr(text)}")
     lines = [l.strip() for l in text.strip().split("\n") if l.strip()]
+    print(f"  [OCR] Lines: {lines}")
 
     signal = {}
     for line in lines:
@@ -170,6 +173,7 @@ def _ocr_table(screenshot_path: str) -> dict:
         elif "OLD" in upper:
             signal["status"] = "old"
 
+    print(f"  [OCR] Parsed: {signal}")
     return signal
 
 

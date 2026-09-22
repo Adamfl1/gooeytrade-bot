@@ -70,6 +70,15 @@ jobs:
         env:
           TV_CHART_URL: ${{ secrets.TV_CHART_URL }}
 
+      - name: Upload debug screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debug-screenshots
+          path: |
+            debug_ocr_crop.png
+            debug_tv_screenshot.png
+
       - name: Commit state
         if: always()
         run: |

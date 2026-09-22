@@ -73,12 +73,12 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
 
     tpsl = parse_tp_sl_labels(raw)
     if not tpsl:
-        print("  [Phase B] No SL/TP labels found on chart")
+        print("  [Phase B] No SL/TP on chart yet — retrying next run")
         return False
 
     sl = tpsl["sl"]
     tp = tpsl["tp"]
-    print(f"\n  [Phase B] SL/TP labels found: SL={sl:.2f}  TP={tp:.2f}")
+    print(f"\n  [Phase B] SL/TP from chart: SL={sl:.2f}  TP={tp:.2f}")
 
     # Apply to the most recent pending trade
     trade = pending[-1]
