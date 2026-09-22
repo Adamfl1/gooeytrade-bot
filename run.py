@@ -399,11 +399,15 @@ def main():
 
         print("  Trade page loaded.\n")
 
-        # --- 4. Phase B first: apply SL/TP to pending trade ---
-        phase_b_done = run_phase_b(page, raw, dry_run, args.volume)
+        # --- 4. Phase B (first pass): apply any lingering pending trades ---
+        phase_b_done_1 = run_phase_b(page, raw, dry_run, args.volume)
 
         # --- 5. Phase A: check for new entry signal ---
         phase_a_done = run_phase_a(page, raw, dry_run, args.volume)
+
+        # --- 6. Phase B (second pass): apply SL/TP for trade just opened in Phase A ---
+        phase_b_done_2 = run_phase_b(page, raw, dry_run, args.volume)
+        phase_b_done = phase_b_done_1 or phase_b_done_2
 
         # --- 6. Nothing to do if no TV signal this run ---
         if not phase_a_done and not phase_b_done:
