@@ -33,21 +33,26 @@ def _save(data: dict) -> None:
 
 # ── Trade history (duplicate prevention) ─────────────────────────────────────
 
-def has_traded(signal_time: str, direction: str) -> bool:
+def has_traded(signal_key: str, direction: str) -> bool:
     """Check if we already traded this exact signal."""
     data = _load()
     for trade in data["trades"]:
-        if trade.get("signal_time") == signal_time and trade.get("direction") == direction:
+        if trade.get("direction") != direction:
+            continue
+        if (trade.get("signal_key") == signal_key
+                or trade.get("signal_time") == signal_key):
             return True
     return False
 
 
 def record_trade(signal_time: str, direction: str, entry_price: float,
-                 sl: float, tp: float, volume: float) -> None:
+                 sl: float, tp: float, volume: float,
+                 signal_key: str | None = None) -> None:
     """Record an executed trade."""
     data = _load()
     data["trades"].append({
         "signal_time": signal_time,
+        "signal_key": signal_key,
         "direction": direction,
         "entry_price": entry_price,
         "sl": sl,

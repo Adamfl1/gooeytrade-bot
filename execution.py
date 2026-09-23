@@ -272,6 +272,21 @@ def save_pending_sl(entries: list[dict]) -> None:
     )
 
 
+def add_pending_sl(direction: str, entry_price: float, volume: float,
+                   entry_candle_start: datetime) -> None:
+    """Queue a live entry for Phase B (SL/TP applied after candle close)."""
+    entries = load_pending_sl()
+    entries.append({
+        "direction": direction,
+        "entry_price": entry_price,
+        "volume": volume,
+        "entry_candle_start": entry_candle_start.isoformat(),
+        "resolved": False,
+        "opened_at": datetime.now(timezone.utc).isoformat(),
+    })
+    save_pending_sl(entries)
+
+
 # ── Git state persistence ────────────────────────────────────────────────────
 
 def commit_state(message: str = None) -> bool:
@@ -467,204 +482,3 @@ def _read_entry_price_from_row(row) -> float | None:
                 continue
     return None
 
-
-def resolve_pending_sl(page: Page, candle_store, dry_run: bool = False) -> int:
-    """Phase B: resolve all pending SL/TP entries whose entry candle has closed.
-
-    For each unresolved entry in pending_sl.json whose entry candle has
-    closed (we have the full 5m bar), compute SL and TP from that candle,
-    find the matching open position row, and edit SL/TP into it.
-
-    Returns the number of entries resolved.
-    """
-    entries = load_pending_sl()
-    unresolved = [e for e in entries if not e.get("resolved", False)]
-    if not unresolved:
-        return 0
-
-    print(f"\n  === PHASE B: RESOLVING PENDING SL/TP ({len(unresolved)} pending) ===\n")
-
-    from indicators import atr_sl_finder
-
-    df = candle_store.get_dataframe()
-    now = datetime.now(timezone.utc)
-    resolved_count = 0
-
-    for entry in unresolved:
-        direction = entry["direction"]
-        entry_candle_start = datetime.fromisoformat(entry["entry_candle_start"])
-        entry_candle_start = entry_candle_start.replace(tzinfo=timezone.utc) \
-            if entry_candle_start.tzinfo is None else entry_candle_start
-        volume = entry.get("volume", DEFAULT_VOLUME)
-        pending_entry_price = entry.get("entry_price", 0)
-
-        # Check if 5+ minutes have elapsed since entry candle start
-        elapsed = (now - entry_candle_start).total_seconds()
-        if elapsed < 5 * 60:
-            print(f"  [{direction.upper()}] Entry candle still open "
-                  f"({elapsed:.0f}s / 300s) -- skipping")
-            continue
-
-        # Look up the entry candle in the store
-        if entry_candle_start not in df.index:
-            print(f"  [{direction.upper()}] Entry candle {entry_candle_start} "
-                  f"not in store -- skipping")
-            continue
-
-        entry_candle = df.loc[entry_candle_start]
-        high = entry_candle["High"]
-        low = entry_candle["Low"]
-
-        # Compute ATR SL Finder for this candle
-        atr_series = atr_sl_finder(df["High"], df["Low"], df["Close"],
-                                   length=14, factor=1.5)
-        atr_val = atr_series.loc[entry_candle_start]
-        if atr_val != atr_val:  # NaN check
-            print(f"  [{direction.upper()}] ATR value is NaN for "
-                  f"{entry_candle_start} -- skipping")
-            continue
-
-        # Find the matching position row and read actual fill price
-        row = _find_position_row(page, direction, volume)
-        actual_entry = pending_entry_price
-        if row is not None:
-            fill_price = _read_entry_price_from_row(row)
-            if fill_price is not None:
-                actual_entry = fill_price
-                print(f"  [{direction.upper()}] Read actual fill price: "
-                      f"{actual_entry:.2f}")
-            else:
-                print(f"  [{direction.upper()}] Could not read fill price "
-                      f"from DOM -- using signal price: {actual_entry:.2f}")
-        else:
-            print(f"  [{direction.upper()}] Position row not found "
-                  f"-- using signal price: {actual_entry:.2f}")
-
-        # Compute SL and TP
-        if direction == "buy":
-            sl = round(low - atr_val, 2)
-            tp = round(actual_entry + (actual_entry - sl) * 3, 2)
-        else:
-            sl = round(high + atr_val, 2)
-            tp = round(actual_entry - (sl - actual_entry) * 3, 2)
-
-        risk = abs(actual_entry - sl)
-        reward = abs(tp - actual_entry)
-        rr = reward / risk if risk > 0 else 0
-
-        print(f"  [{direction.upper()}] Entry: {actual_entry:.2f}  "
-              f"SL: {sl:.2f}  TP: {tp:.2f}  R:R: {rr:.2f}")
-
-        if dry_run:
-            print(f"  [DRY RUN] Would edit position SL/TP -- skipping dialog")
-            entry["resolved"] = True
-            entry["resolved_at"] = now.isoformat()
-            entry["actual_entry"] = actual_entry
-            resolved_count += 1
-            continue
-
-        if row is None:
-            print(f"  [{direction.upper()}] WARNING: Position row not found "
-                  f"-- cannot edit SL/TP")
-            continue
-
-        # Click the TPSL (pencil) button to open the edit dialog
-        print(f"  Opening SL/TP edit dialog...")
-        tpsl_btn = row.locator(SEL_POSITION_TPSL_BTN)
-        tpsl_btn.click()
-        time.sleep(1)
-
-        # Wait for dialog
-        dialog = page.locator(SEL_POSITION_EDIT_DIALOG)
-        try:
-            dialog.wait_for(state="visible", timeout=5000)
-        except PlaywrightTimeout:
-            print(f"  [{direction.upper()}] ERROR: Edit dialog did not appear")
-            continue
-
-        # Toggle SL and TP ON (.nth(0) = SL, .nth(1) = TP)
-        toggles = dialog.locator(SEL_POSITION_EDIT_TOGGLE)
-        for idx, label in [(0, "Stop Loss"), (1, "Take Profit")]:
-            toggle = toggles.nth(idx)
-            value_inputs = dialog.locator(SEL_POSITION_EDIT_VALUE)
-            value_input = value_inputs.nth(idx)
-            # Check if the value input is already visible/enabled
-            is_on = value_input.count() > 0 and value_input.is_visible()
-            if not is_on:
-                toggle.click()
-                time.sleep(0.5)
-                print(f"    Toggled {label} ON")
-            else:
-                print(f"    {label} already ON")
-
-        # Type SL value (nth(0))
-        print(f"  Setting Stop Loss to {sl}...")
-        sl_container = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(0)
-        sl_stepper = sl_container.locator(SEL_STEPPER_INPUT)
-        sl_stepper.wait_for(state="visible", timeout=5000)
-        sl_stepper.click(click_count=3)
-        time.sleep(0.05)
-        page.keyboard.press("Control+a")
-        page.keyboard.insert_text(str(sl))
-        time.sleep(0.1)
-        page.keyboard.press("Tab")
-        time.sleep(0.3)
-
-        # Type TP value (nth(1))
-        print(f"  Setting Take Profit to {tp}...")
-        tp_container = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(1)
-        tp_stepper = tp_container.locator(SEL_STEPPER_INPUT)
-        tp_stepper.wait_for(state="visible", timeout=5000)
-        tp_stepper.click(click_count=3)
-        time.sleep(0.05)
-        page.keyboard.press("Control+a")
-        page.keyboard.insert_text(str(tp))
-        time.sleep(0.1)
-        # Defocus TP by pressing Tab then clicking back into the dialog
-        page.keyboard.press("Tab")
-        time.sleep(0.3)
-
-        # Click Save
-        save_btn = dialog.locator(SEL_POSITION_EDIT_SAVE)
-        try:
-            save_btn.wait_for(state="visible", timeout=5000)
-            # Wait for button to become enabled
-            start = time.time()
-            while time.time() - start < 5:
-                disabled = save_btn.get_attribute("disabled")
-                if disabled is None:
-                    break
-                time.sleep(0.3)
-            save_btn.click()
-            time.sleep(2)
-
-            # Handle confirmation popup after save
-            confirm_btn = page.locator('[data-testid="overlay-confirm-actions-confirm"]')
-            if confirm_btn.count() > 0:
-                try:
-                    confirm_btn.wait_for(state="visible", timeout=5000)
-                    confirm_btn.click()
-                    time.sleep(2)
-                    print(f"  Confirmation confirmed!")
-                except Exception:
-                    pass
-
-            print(f"  Position SL/TP saved!")
-        except PlaywrightTimeout:
-            print(f"  [{direction.upper()}] ERROR: Save button not found/enabled")
-            continue
-
-        # Mark resolved
-        entry["resolved"] = True
-        entry["resolved_at"] = now.isoformat()
-        entry["actual_entry"] = actual_entry
-        entry["sl"] = sl
-        entry["tp"] = tp
-        resolved_count += 1
-
-    # Persist
-    save_pending_sl(entries)
-    if resolved_count > 0:
-        commit_state(f"bot: resolve {resolved_count} pending SL/TP")
-
-    return resolved_count

@@ -37,8 +37,8 @@ except ImportError:
 
 TV_SESSION_FILE = Path("tv_session.json")
 
-# Table crop region (top-right corner of 1920x1080 chart, includes FRESH/OLD row)
-TABLE_CROP = (1635, 42, 1815, 160)
+# Table crop region (top-right corner of 1920x1080 chart, includes all 4 rows: BUY/SL/TP/FRESH)
+TABLE_CROP = (1635, 42, 1815, 210)
 
 
 def scrape_chart(chart_url: str, timeout: int = 30000) -> dict:

@@ -1,6 +1,8 @@
 name: GooeyTrade Bot
 
 on:
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       live:
@@ -14,6 +16,10 @@ on:
         default: '2.5'
         type: string
 
+concurrency:
+  group: gooeytrade-bot
+  cancel-in-progress: false
+
 env:
   # Always live when triggered via schedule or manual live=true
   DRY_RUN: ${{ github.event.inputs.live == 'false' && false || false }}
@@ -22,7 +28,7 @@ env:
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: write
 

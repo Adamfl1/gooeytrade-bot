@@ -2,11 +2,20 @@
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'run.py'
+      - 'execution.py'
+      - 'state.py'
+      - 'tv_scraper.py'
+      - 'test_phase_b_live.py'
+      - '.github/workflows/test-phase-b.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     permissions:
       contents: write
 
@@ -39,8 +48,19 @@ jobs:
             echo "${{ secrets.GOOEYTRADE_SESSION_BASE64 }}" | base64 -d > session.json
           fi
 
-      - name: Test Phase B - check positions & SL/TP dialog
-        run: python test_phase_b.py
+      - name: Test Phase B - LIVE (scrape TV labels → apply to open position)
+        run: python test_phase_b_live.py
         env:
           TV_CHART_URL: ${{ secrets.TV_CHART_URL }}
           DRY_RUN: 'false'
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase-b-live-screenshots
+          path: |
+            debug_phase_b_*.png
+            debug_ocr_crop.png
+            debug_tv_screenshot.png
+          if-no-files-found: ignore

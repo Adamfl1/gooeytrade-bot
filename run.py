@@ -37,10 +37,11 @@ from config import (
 from tv_scraper import scrape_chart, parse_entry_label, parse_tp_sl_labels, parse_signal
 from state import (
     has_traded, record_trade, get_trade_count,
-    add_pending_tp_sl, get_pending_tp_sl, remove_pending_tp_sl,
     get_signal_first_seen, record_signal_first_seen,
 )
-from execution import execute_market_order
+from execution import (
+    execute_market_order, add_pending_sl, load_pending_sl, save_pending_sl,
+)
 
 
 def scrape_tv() -> dict | None:
@@ -62,55 +63,20 @@ def scrape_tv() -> dict | None:
         return None
 
 
-def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
-    """Phase B: Find SL/TP labels and apply to pending trade.
+def _apply_sl_tp_dialog(page, direction: str, volume: float,
+                        sl: float, tp: float) -> bool:
+    """Open the position edit dialog on GooeyTrade and save SL/TP values."""
+    from execution import (
+        _find_position_row, SEL_POSITION_TPSL_BTN,
+        SEL_POSITION_EDIT_DIALOG, SEL_POSITION_EDIT_TOGGLE,
+        SEL_POSITION_EDIT_VALUE, SEL_STEPPER_INPUT,
+        SEL_POSITION_EDIT_SAVE,
+    )
 
-    Returns True if SL/TP was applied.
-    """
-    pending = get_pending_tp_sl()
-    if not pending:
-        print("  [Phase B] No pending trades waiting for SL/TP")
-        return False
-
-    # Apply to the most recent pending trade
-    trade = pending[-1]
-    direction = trade["direction"]
-    entry_price = trade["entry_price"]
-    trade_volume = trade.get("volume", volume)
-
-    sl = trade.get("sl", 0)
-    tp = trade.get("tp", 0)
-
-    if not sl or not tp:
-        tpsl = parse_tp_sl_labels(raw)
-        if tpsl:
-            sl = tpsl["sl"]
-            tp = tpsl["tp"]
-
-    if not sl or not tp:
-        print("  [Phase B] No SL/TP values available — retrying next run")
-        return False
-
-    print(f"\n  [Phase B] SL/TP to apply: SL={sl:.2f}  TP={tp:.2f}")
-    print(f"  [Phase B] Applying to: {direction.upper()} @ {entry_price:.2f}")
-
-    if dry_run:
-        print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f}  TP={tp:.2f}")
-        remove_pending_tp_sl(direction, entry_price)
-        return True
-
-    # Edit the position on GooeyTrade
     try:
-        from execution import (
-            _find_position_row, SEL_POSITION_TPSL_BTN,
-            SEL_POSITION_EDIT_DIALOG, SEL_POSITION_EDIT_TOGGLE,
-            SEL_POSITION_EDIT_VALUE, SEL_STEPPER_INPUT,
-            SEL_POSITION_EDIT_SAVE,
-        )
-
-        row = _find_position_row(page, direction, trade_volume)
+        row = _find_position_row(page, direction, volume)
         if row is None:
-            print(f"  [Phase B] WARNING: Position row not found for {direction.upper()}")
+            print(f"  [Phase B] Position row not found for {direction.upper()}")
             return False
 
         # Click TPSL button to open edit dialog
@@ -180,13 +146,75 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
                 pass
 
         print("  [Phase B] Position SL/TP saved!")
-
-        remove_pending_tp_sl(direction, entry_price)
         return True
 
     except Exception as e:
         print(f"  [Phase B] ERROR: {e}")
         return False
+
+
+def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
+    """Phase B: after the entry candle closes, scrape SL/TP labels from
+    the TradingView chart and apply them to the open position.
+
+    Returns True if SL/TP was applied.
+    """
+    entries = load_pending_sl()
+    unresolved = [e for e in entries if not e.get("resolved")]
+    if not unresolved:
+        print("  [Phase B] No pending trades waiting for SL/TP")
+        return False
+
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc)
+    applied_any = False
+
+    for entry in unresolved:
+        direction = entry["direction"]
+        entry_price = entry.get("entry_price", 0)
+        trade_volume = entry.get("volume", volume)
+        start = datetime.fromisoformat(entry["entry_candle_start"])
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=timezone.utc)
+
+        # Strategy has no valid SL/TP before the entry candle closes
+        elapsed = (now - start).total_seconds()
+        if elapsed < 5 * 60:
+            print(f"  [Phase B] {direction.upper()} entry candle still open "
+                  f"({elapsed:.0f}s / 300s) — retrying next run")
+            continue
+
+        # Candle closed — scrape SL/TP labels from this run's chart scrape
+        tpsl = parse_tp_sl_labels(raw)
+        if not tpsl:
+            print(f"  [Phase B] No SL/TP labels on chart yet for "
+                  f"{direction.upper()} @ {entry_price:.2f} — retrying next run")
+            continue
+        sl, tp = tpsl["sl"], tpsl["tp"]
+
+        print(f"\n  [Phase B] SL/TP from chart: SL={sl:.2f}  TP={tp:.2f}")
+        print(f"  [Phase B] Applying to: {direction.upper()} @ {entry_price:.2f}")
+
+        if dry_run:
+            print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f}  TP={tp:.2f}")
+            entry["resolved"] = True
+            entry["resolved_at"] = now.isoformat()
+            entry["sl"] = sl
+            entry["tp"] = tp
+            applied_any = True
+            continue
+
+        if _apply_sl_tp_dialog(page, direction, trade_volume, sl, tp):
+            entry["resolved"] = True
+            entry["resolved_at"] = now.isoformat()
+            entry["sl"] = sl
+            entry["tp"] = tp
+            applied_any = True
+        else:
+            print(f"  [Phase B] Failed to apply SL/TP — retrying next run")
+
+    save_pending_sl(entries)
+    return applied_any
 
 
 def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
@@ -205,11 +233,12 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
     direction = entry["direction"]
     entry_price = entry["entry_price"]
 
-    tpsl = parse_tp_sl_labels(raw)
-    sl = tpsl["sl"] if tpsl else 0
-    tp = tpsl["tp"] if tpsl else 0
+    # Strategy has no valid SL/TP before the entry candle closes —
+    # Phase B scrapes the SL/TP labels from the chart on a later run.
+    sl = 0
+    tp = 0
 
-    print(f"\n  [Phase A] Entry signal: {direction.upper()} @ {entry_price:.2f} (SL: {sl}, TP: {tp})")
+    print(f"\n  [Phase A] Entry signal: {direction.upper()} @ {entry_price:.2f} (SL/TP after candle close)")
 
     # Check OCR freshness status (Pine Script sends FRESH/OLD)
     signal_status = raw.get("signal_table", {}).get("status", "")
@@ -284,8 +313,8 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
             entry_price=entry_price,
             sl=sl, tp=tp,
             volume=volume,
+            signal_key=signal_key,
         )
-        add_pending_tp_sl(direction, entry_price, volume, sl, tp)
         return True
 
     # Build signal object for execute_market_order
@@ -309,15 +338,22 @@ def run_phase_a(page, raw: dict, dry_run: bool, volume: float) -> bool:
     if live_price > 0:
         print(f"\n  Trade opened. Live price: {live_price:.2f}")
         from datetime import datetime, timezone
-        signal_time = datetime.now(timezone.utc).isoformat()
+        signal_time_dt = datetime.now(timezone.utc)
+        signal_time = signal_time_dt.isoformat()
         record_trade(
             signal_time=signal_time,
             direction=direction,
             entry_price=live_price,
             sl=sl, tp=tp,
             volume=volume,
+            signal_key=signal_key,
         )
-        add_pending_tp_sl(direction, live_price, volume, sl, tp)
+
+        # Queue for Phase B: SL/TP scraped from chart after candle close
+        candle_start = signal_time_dt.replace(
+            minute=(signal_time_dt.minute // 5) * 5, second=0, microsecond=0
+        )
+        add_pending_sl(direction, live_price, volume, candle_start)
         return True
     else:
         print("\n  Trade failed. Check output above.")
@@ -344,7 +380,7 @@ def main():
     print("  GooeyTrade Bot")
     print(f"  Mode: {'LIVE' if not dry_run else 'DRY RUN'}")
     print(f"  Trades so far: {get_trade_count()}")
-    pending = get_pending_tp_sl()
+    pending = [e for e in load_pending_sl() if not e.get("resolved")]
     if pending:
         print(f"  Pending SL/TP: {len(pending)} trade(s)")
     print("=" * 60)
@@ -409,17 +445,12 @@ def main():
 
         print("  Trade page loaded.\n")
 
-        # --- 4. Phase B (first pass): apply any lingering pending trades ---
-        phase_b_done_1 = run_phase_b(page, raw, dry_run, args.volume)
+        # --- 4. Phase B: scrape SL/TP labels from chart (after candle close) ---
+        phase_b_done = run_phase_b(page, raw, dry_run, args.volume)
 
-        # --- 5. Phase A: check for new entry signal ---
+        # --- 5. Phase A: check for new entry signal (SL/TP deferred) ---
         phase_a_done = run_phase_a(page, raw, dry_run, args.volume)
 
-        # --- 6. Phase B (second pass): apply SL/TP for trade just opened in Phase A ---
-        phase_b_done_2 = run_phase_b(page, raw, dry_run, args.volume)
-        phase_b_done = phase_b_done_1 or phase_b_done_2
-
-        # --- 6. Nothing to do if no TV signal this run ---
         if not phase_a_done and not phase_b_done:
             print("\n  No actionable signals from TradingView this run.")
 
