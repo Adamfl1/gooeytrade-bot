@@ -57,18 +57,21 @@ if barstate.islast
     // Always clear first
     table.clear(sigTable, 0, 0, 1, 3)
 
-    if not na(signal_dir) and not na(entry_price) and not na(sl_price) and not na(tp_price)
-        // Row 0: Direction + Entry
+    if not na(signal_dir) and not na(entry_price)
+        // Row 0: Direction + Entry (visible immediately on entry bar)
         table.cell(sigTable, 0, 0, signal_dir, text_color=color.white, text_size=size.normal)
         table.cell(sigTable, 1, 0, str.tostring(entry_price, format.mintick), text_color=color.white, text_size=size.normal)
 
-        // Row 1: SL
-        table.cell(sigTable, 0, 1, "SL", text_color=color.red, text_size=size.normal)
-        table.cell(sigTable, 1, 1, str.tostring(sl_price, format.mintick), text_color=color.red, text_size=size.normal)
+        // Rows 1 & 2 (SL/TP) only appear ONE BAR AFTER entry candle closes
+        bool candle_closed = not na(signal_bar) and bar_index > signal_bar
+        if candle_closed and not na(sl_price) and not na(tp_price)
+            // Row 1: SL
+            table.cell(sigTable, 0, 1, "SL", text_color=color.red, text_size=size.normal)
+            table.cell(sigTable, 1, 1, str.tostring(sl_price, format.mintick), text_color=color.red, text_size=size.normal)
 
-        // Row 2: TP
-        table.cell(sigTable, 0, 2, "TP", text_color=color.teal, text_size=size.normal)
-        table.cell(sigTable, 1, 2, str.tostring(tp_price, format.mintick), text_color=color.teal, text_size=size.normal)
+            // Row 2: TP
+            table.cell(sigTable, 0, 2, "TP", text_color=color.teal, text_size=size.normal)
+            table.cell(sigTable, 1, 2, str.tostring(tp_price, format.mintick), text_color=color.teal, text_size=size.normal)
 
         // Row 3: FRESH / OLD status (120s expiry)
         seconds_since = (time - signal_bar) / 1000
@@ -82,18 +85,27 @@ if barstate.islast
         table.cell(sigTable, 1, 0, "-", text_color=color.gray, text_size=size.normal)
 
 // ── Visual labels on chart (canvas — for your reference) ────────────────────
+var bool sltp_labeled = false
+
 if buy_signal
     label.new(bar_index, low, "BUY " + str.tostring(entry_price, format.mintick),
               color=color.green, textcolor=color.white, style=label.style_label_up, size=size.small)
-    label.new(bar_index, sl_price, "SL " + str.tostring(sl_price, format.mintick),
-              color=color.red, textcolor=color.white, style=label.style_label_up, size=size.tiny)
-    label.new(bar_index, tp_price, "TP " + str.tostring(tp_price, format.mintick),
-              color=color.teal, textcolor=color.white, style=label.style_label_down, size=size.tiny)
+    sltp_labeled := false
 
 if sell_signal
     label.new(bar_index, high, "SELL " + str.tostring(entry_price, format.mintick),
               color=color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
-    label.new(bar_index, sl_price, "SL " + str.tostring(sl_price, format.mintick),
-              color=color.red, textcolor=color.white, style=label.style_label_down, size=size.tiny)
-    label.new(bar_index, tp_price, "TP " + str.tostring(tp_price, format.mintick),
-              color=color.teal, textcolor=color.white, style=label.style_label_up, size=size.tiny)
+    sltp_labeled := false
+
+if not na(signal_bar) and bar_index > signal_bar and not sltp_labeled and not na(sl_price) and not na(tp_price)
+    if signal_dir == "BUY"
+        label.new(bar_index, low, "SL " + str.tostring(sl_price, format.mintick),
+                  color=color.red, textcolor=color.white, style=label.style_label_up, size=size.tiny)
+        label.new(bar_index, high, "TP " + str.tostring(tp_price, format.mintick),
+                  color=color.teal, textcolor=color.white, style=label.style_label_down, size=size.tiny)
+    else
+        label.new(bar_index, high, "SL " + str.tostring(sl_price, format.mintick),
+                  color=color.red, textcolor=color.white, style=label.style_label_up, size=size.tiny)
+        label.new(bar_index, low, "TP " + str.tostring(tp_price, format.mintick),
+                  color=color.teal, textcolor=color.white, style=label.style_label_up, size=size.tiny)
+    sltp_labeled := true

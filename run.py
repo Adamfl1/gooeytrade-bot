@@ -63,6 +63,41 @@ def scrape_tv() -> dict | None:
         return None
 
 
+def _match_sl_tp(raw: dict, position_direction: str, position_entry: float) -> tuple[float | None, float | None, str | None]:
+    """Check if matching SL/TP labels exist on the chart for this position.
+
+    Returns (sl, tp, reason). If reason is not None, no valid match was found yet
+    (expected/normal until the entry candle closes and labels appear).
+    """
+    # 1. Require both SL and TP labels to be present
+    tpsl = parse_tp_sl_labels(raw)
+    if not tpsl or not tpsl.get("sl") or not tpsl.get("tp"):
+        return None, None, "no match yet: SL/TP label pair not on chart yet (candle still open or not formed)"
+
+    sl = tpsl["sl"]
+    tp = tpsl["tp"]
+
+    # 2. Check direction match from chart signal table / entry label
+    entry_lbl = parse_entry_label(raw)
+    st = raw.get("signal_table", {})
+    chart_dir = (entry_lbl.get("direction") if entry_lbl else None) or st.get("direction")
+
+    if not chart_dir:
+        return None, None, "no match yet: SL/TP labels present but no matching chart direction found"
+
+    if chart_dir.lower() != position_direction.lower():
+        return None, None, f"no match yet: chart direction ({chart_dir}) != position direction ({position_direction})"
+
+    # 3. Check entry price proximity (within 0.5% tolerance)
+    chart_entry = (entry_lbl.get("entry_price") if entry_lbl else None) or st.get("entry_price")
+    if chart_entry and position_entry > 0:
+        dist_pct = abs(chart_entry - position_entry) / position_entry * 100
+        if dist_pct > 0.5:
+            return None, None, f"no match yet: chart entry ({chart_entry:.2f}) differs from position entry ({position_entry:.2f}) by {dist_pct:.2f}%"
+
+    return sl, tp, None
+
+
 def _apply_sl_tp_dialog(page, direction: str, volume: float,
                         sl: float, tp: float) -> str | None:
     """Open the position edit dialog on GooeyTrade and save SL/TP values.
@@ -157,15 +192,15 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
 
 
 def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
-    """Phase B: after the entry candle closes, scrape SL/TP labels from
-    the TradingView chart and apply them to the open position.
+    """Phase B: after the entry candle closes, check if matching SL/TP labels
+    exist on the TradingView chart for each open position without SL/TP yet.
 
-    Returns True if SL/TP was applied.
+    Returns True if SL/TP was applied to any position.
     """
     entries = load_pending_sl()
     unresolved = [e for e in entries if not e.get("resolved")]
     if not unresolved:
-        print("  [Phase B] No pending trades waiting for SL/TP")
+        print("  [Phase B] No open positions waiting for SL/TP")
         return False
 
     from datetime import datetime, timezone
@@ -176,37 +211,24 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
         direction = entry["direction"]
         entry_price = entry.get("entry_price", 0)
         trade_volume = entry.get("volume", volume)
-        start = datetime.fromisoformat(entry["entry_candle_start"])
-        if start.tzinfo is None:
-            start = start.replace(tzinfo=timezone.utc)
 
-        # Strategy has no valid SL/TP before the entry candle closes
-        elapsed = (now - start).total_seconds()
-        if elapsed < 5 * 60:
-            print(f"  [Phase B] {direction.upper()} entry candle still open "
-                  f"({elapsed:.0f}s / 300s) — retrying next run")
-            entry["last_attempt_at"] = now.isoformat()
-            entry["last_error"] = f"candle still open ({elapsed:.0f}s)"
+        # Check for a matching SL/TP label pair on the chart
+        sl, tp, match_reason = _match_sl_tp(raw, direction, entry_price)
+        entry["last_attempt_at"] = now.isoformat()
+
+        if match_reason is not None:
+            print(f"  [Phase B] Unset-TP/SL position {direction.upper()} @ {entry_price:.2f}: "
+                  f"matching SL/TP label not found yet — {match_reason} (expected/normal)")
+            entry["last_error"] = match_reason
             continue
 
-        # Candle closed — scrape SL/TP labels from this run's chart scrape
-        tpsl = parse_tp_sl_labels(raw)
-        if not tpsl:
-            print(f"  [Phase B] No SL/TP labels on chart yet for "
-                  f"{direction.upper()} @ {entry_price:.2f} — retrying next run")
-            entry["last_attempt_at"] = now.isoformat()
-            entry["last_error"] = "no SL/TP labels on chart (OCR scrape empty)"
-            continue
-        sl, tp = tpsl["sl"], tpsl["tp"]
-
-        print(f"\n  [Phase B] SL/TP from chart: SL={sl:.2f}  TP={tp:.2f}")
-        print(f"  [Phase B] Applying to: {direction.upper()} @ {entry_price:.2f}")
+        print(f"\n  [Phase B] Unset-TP/SL position {direction.upper()} @ {entry_price:.2f}: "
+              f"matching SL/TP label found! SL={sl:.2f}  TP={tp:.2f}")
 
         if dry_run:
             print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f}  TP={tp:.2f}")
             entry["resolved"] = True
             entry["resolved_at"] = now.isoformat()
-            entry["last_attempt_at"] = now.isoformat()
             entry.pop("last_error", None)
             entry["sl"] = sl
             entry["tp"] = tp
@@ -214,7 +236,6 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
             continue
 
         err = _apply_sl_tp_dialog(page, direction, trade_volume, sl, tp)
-        entry["last_attempt_at"] = now.isoformat()
         if err is None:
             entry["resolved"] = True
             entry["resolved_at"] = now.isoformat()
@@ -222,6 +243,7 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
             entry["sl"] = sl
             entry["tp"] = tp
             applied_any = True
+            print(f"  [Phase B] Successfully applied SL/TP to {direction.upper()} position!")
         else:
             entry["last_error"] = err
             print(f"  [Phase B] Failed to apply SL/TP ({err}) — retrying next run")
