@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -70,6 +72,7 @@ jobs:
         run: |
           git config user.name "gooeytrade-bot"
           git config user.email "gooeytrade-bot@local"
+          git pull --rebase origin main || true
           [ -f phase_b_test_result.json ] && git add phase_b_test_result.json || true
           git diff --staged --quiet || git commit -m "test: phase B result $(date -u %Y-%m-%dT%H:%M:%SZ)"
           git push || true
