@@ -6,6 +6,8 @@
     "entry_candle_start": "2026-09-23T13:10:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-23T13:11:28+00:00",
-    "migrated_from": "bot_state.pending_tp_sl"
+    "migrated_from": "bot_state.pending_tp_sl",
+    "last_attempt_at": "2026-09-23T20:56:15.146506+00:00",
+    "last_error": "position row not found (sell vol=2.5)"
   }
 ]
