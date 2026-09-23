@@ -99,9 +99,11 @@ def _match_sl_tp(raw: dict, position_direction: str, position_entry: float) -> t
 
 
 def _apply_sl_tp_dialog(page, direction: str, volume: float,
-                        sl: float, tp: float) -> str | None:
+                        sl: float, tp: float, row=None) -> str | None:
     """Open the position edit dialog on GooeyTrade and save SL/TP values.
 
+    If `row` (a position row locator) is given it is used directly,
+    otherwise the row is looked up by direction + volume.
     Returns None on success, or an error-reason string on failure.
     """
     from execution import (
@@ -112,7 +114,8 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
     )
 
     try:
-        row = _find_position_row(page, direction, volume)
+        if row is None:
+            row = _find_position_row(page, direction, volume)
         if row is None:
             print(f"  [Phase B] Position row not found for {direction.upper()}")
             return f"position row not found ({direction} vol={volume})"
@@ -191,62 +194,126 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
         return f"{type(e).__name__}: {e}"
 
 
+def _find_matching_pending(entries: list[dict], direction: str,
+                           volume: float | None):
+    """Find an unresolved pending_sl entry for direction + volume (audit only)."""
+    for e in entries:
+        if e.get("resolved"):
+            continue
+        if (e.get("direction") or "").lower() != direction.lower():
+            continue
+        pv = e.get("volume")
+        if pv is None or volume is None:
+            return e
+        try:
+            if abs(float(pv) - float(volume)) < 0.0001:
+                return e
+        except (TypeError, ValueError):
+            return e
+    return None
+
+
 def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
-    """Phase B: after the entry candle closes, check if matching SL/TP labels
-    exist on the TradingView chart for each open position without SL/TP yet.
+    """Phase B: scan ALL open positions; for every row where BOTH TP and SL
+    show "-" (unset), require a matching SL+TP label pair on the TradingView
+    chart (same direction + entry price) before applying anything.
+
+    pending_sl.json is NOT the source of truth here — it is only an audit
+    trail (last_attempt_at / last_error / resolved flags). The decision to
+    edit a position comes from: (1) row shows TP/SL unset, AND (2) a matching
+    SL+TP label pair is currently scraped from the chart.
 
     Returns True if SL/TP was applied to any position.
     """
-    entries = load_pending_sl()
-    unresolved = [e for e in entries if not e.get("resolved")]
-    if not unresolved:
-        print("  [Phase B] No open positions waiting for SL/TP")
+    from execution import list_open_positions
+
+    positions = list_open_positions(page)
+    if not positions:
+        print("  [Phase B] No open positions found — nothing to scan")
         return False
+
+    print(f"  [Phase B] Scanning {len(positions)} open position(s) for unset TP/SL...")
 
     from datetime import datetime, timezone
     now = datetime.now(timezone.utc)
+    entries = load_pending_sl()
     applied_any = False
 
-    for entry in unresolved:
-        direction = entry["direction"]
-        entry_price = entry.get("entry_price", 0)
-        trade_volume = entry.get("volume", volume)
+    for pos in positions:
+        direction = pos["direction"]
+        vol = pos["volume"]
+        row_entry = pos["entry_price"]
+        sl_text, tp_text = pos["sl_text"], pos["tp_text"]
+        tag = (f"{(direction or '?').upper()} "
+               f"@ {row_entry:.2f}" if row_entry else f"{(direction or '?').upper()} "
+               f"(entry unknown)")
 
-        # Check for a matching SL/TP label pair on the chart
-        sl, tp, match_reason = _match_sl_tp(raw, direction, entry_price)
-        entry["last_attempt_at"] = now.isoformat()
+        if direction is None:
+            print(f"  [Phase B] Position row #{pos['index']}: "
+                  f"direction unreadable — skipping")
+            continue
+
+        # Row already has TP/SL set → nothing to do
+        if pos["sl_set"] and pos["tp_set"]:
+            print(f"  [Phase B] {tag}: TP/SL already set "
+                  f"(SL={sl_text} TP={tp_text}) — skipping")
+            pending = _find_matching_pending(entries, direction, vol)
+            if pending is not None and not pending.get("resolved"):
+                pending["resolved"] = True
+                pending["resolved_at"] = now.isoformat()
+                pending.pop("last_error", None)
+            continue
+
+        # Candidate: at least one of TP/SL shows "-" (unset)
+        print(f"  [Phase B] {tag}: TP/SL unset "
+              f"(SL={sl_text!r} TP={tp_text!r}) — checking chart labels...")
+
+        # Entry price for matching: row first, pending record as fallback
+        pending = _find_matching_pending(entries, direction, vol)
+        match_entry = row_entry or (pending.get("entry_price", 0) if pending else 0) or 0
+
+        # Require an actual SL label AND TP label for this direction+entry —
+        # a BUY/SELL entry label alone is NEVER enough.
+        sl, tp, match_reason = _match_sl_tp(raw, direction, match_entry)
+        if pending is not None:
+            pending["last_attempt_at"] = now.isoformat()
 
         if match_reason is not None:
-            print(f"  [Phase B] Unset-TP/SL position {direction.upper()} @ {entry_price:.2f}: "
-                  f"matching SL/TP label not found yet — {match_reason} (expected/normal)")
-            entry["last_error"] = match_reason
+            print(f"  [Phase B] {tag}: no SL/TP label yet, skipping — "
+                  f"{match_reason} (expected/normal)")
+            if pending is not None:
+                pending["last_error"] = match_reason
             continue
 
-        print(f"\n  [Phase B] Unset-TP/SL position {direction.upper()} @ {entry_price:.2f}: "
-              f"matching SL/TP label found! SL={sl:.2f}  TP={tp:.2f}")
+        print(f"  [Phase B] {tag}: matching SL/TP label found! "
+              f"SL={sl:.2f} TP={tp:.2f} — applying...")
 
         if dry_run:
-            print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f}  TP={tp:.2f}")
-            entry["resolved"] = True
-            entry["resolved_at"] = now.isoformat()
-            entry.pop("last_error", None)
-            entry["sl"] = sl
-            entry["tp"] = tp
+            print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f} TP={tp:.2f}")
+            if pending is not None:
+                pending["resolved"] = True
+                pending["resolved_at"] = now.isoformat()
+                pending.pop("last_error", None)
+                pending["sl"] = sl
+                pending["tp"] = tp
             applied_any = True
             continue
 
-        err = _apply_sl_tp_dialog(page, direction, trade_volume, sl, tp)
+        err = _apply_sl_tp_dialog(page, direction, vol if vol is not None else volume,
+                                  sl, tp, row=pos["row"])
         if err is None:
-            entry["resolved"] = True
-            entry["resolved_at"] = now.isoformat()
-            entry.pop("last_error", None)
-            entry["sl"] = sl
-            entry["tp"] = tp
+            print(f"  [Phase B] {tag}: SL/TP applied successfully!")
+            if pending is not None:
+                pending["resolved"] = True
+                pending["resolved_at"] = now.isoformat()
+                pending.pop("last_error", None)
+                pending["sl"] = sl
+                pending["tp"] = tp
             applied_any = True
-            print(f"  [Phase B] Successfully applied SL/TP to {direction.upper()} position!")
         else:
-            entry["last_error"] = err
-            print(f"  [Phase B] Failed to apply SL/TP ({err}) — retrying next run")
+            print(f"  [Phase B] {tag}: failed to apply SL/TP ({err}) — retrying next run")
+            if pending is not None:
+                pending["last_error"] = err
 
     save_pending_sl(entries)
     return applied_any

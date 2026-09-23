@@ -482,3 +482,116 @@ def _read_entry_price_from_row(row) -> float | None:
                 continue
     return None
 
+
+def _read_sl_tp_from_row(row) -> tuple[str | None, str | None]:
+    """Read the displayed SL/TP cell texts from an open-position row.
+
+    Returns (sl_text, tp_text); each is None if no matching cell was found.
+    Unset cells typically show "-" / "—" / "".
+    """
+    sl_text, tp_text = None, None
+    cands = row.locator(
+        '[data-testid*="sl"], [data-testid*="stop"], '
+        '[data-testid*="tp"], [data-testid*="take"]'
+    )
+    try:
+        n = cands.count()
+    except Exception:
+        return None, None
+    for i in range(min(n, 20)):
+        el = cands.nth(i)
+        try:
+            tid = (el.get_attribute("data-testid") or "").lower()
+        except Exception:
+            continue
+        # Skip action buttons / dialog toggles, not value cells
+        if "btn" in tid or "toggle" in tid or "dialog" in tid or "header" in tid:
+            continue
+        try:
+            text = el.inner_text(timeout=1500).strip()
+        except Exception:
+            continue
+        is_sl = ("stop" in tid) or ("-sl" in tid) or ("_sl" in tid) or tid.endswith("sl")
+        is_tp = ("take" in tid) or ("tp" in tid and "tpsl-btn" not in tid)
+        if is_sl and sl_text is None:
+            sl_text = text
+        elif is_tp and tp_text is None:
+            tp_text = text
+        elif not is_sl and not is_tp:
+            continue
+    return sl_text, tp_text
+
+
+def _sl_tp_value_is_set(text: str | None) -> bool:
+    """True if a row SL/TP cell shows a real numeric value (not '-' / empty)."""
+    if text is None:
+        return False
+    t = text.strip()
+    if t in ("", "-", "—", "–", "N/A", "n/a", "none", "None"):
+        return False
+    try:
+        float(t.replace(",", ""))
+        return True
+    except ValueError:
+        return False
+
+
+def list_open_positions(page: Page, timeout: int = 8000) -> list[dict]:
+    """Scan ALL open-position rows on the trade page.
+
+    Returns a list of dicts: {index, direction, volume, entry_price,
+    sl_text, tp_text, sl_set, tp_set, row}. Empty list if none visible.
+    """
+    rows = page.locator(SEL_POSITION_ROW)
+    try:
+        rows.first.wait_for(state="visible", timeout=timeout)
+    except PlaywrightTimeout:
+        return []
+
+    positions = []
+    try:
+        count = rows.count()
+    except Exception:
+        return []
+    for i in range(count):
+        row = rows.nth(i)
+        direction = None
+        try:
+            badges = row.locator(".ui-badge")
+            for bi in range(badges.count()):
+                try:
+                    t = badges.nth(bi).inner_text(timeout=2000).strip().lower()
+                except Exception:
+                    continue
+                if t in ("acheter", "buy", "long"):
+                    direction = "buy"
+                    break
+                if t in ("vendre", "sell", "short"):
+                    direction = "sell"
+                    break
+        except Exception:
+            pass
+        volume = None
+        try:
+            vol_el = row.locator(SEL_POSITION_VOLUME)
+            if vol_el.count() > 0:
+                volume = float(
+                    vol_el.first.inner_text(timeout=2000).strip().replace(",", "")
+                )
+        except (ValueError, Exception):
+            volume = None
+        entry_price = _read_entry_price_from_row(row)
+        sl_text, tp_text = _read_sl_tp_from_row(row)
+        positions.append({
+            "index": i,
+            "direction": direction,
+            "volume": volume,
+            "entry_price": entry_price,
+            "sl_text": sl_text,
+            "tp_text": tp_text,
+            "sl_set": _sl_tp_value_is_set(sl_text),
+            "tp_set": _sl_tp_value_is_set(tp_text),
+            "row": row,
+        })
+    return positions
+
