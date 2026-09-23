@@ -1,10 +1,12 @@
 """Live Phase B test — no Phase A, opens NO new trades.
 
-1. Scrape TradingView → SL/TP labels
-2. Load GooeyTrade → list open positions
-3. Seed a backdated pending_sl entry matching an open position
-4. Call run_phase_b(live) → real edit dialog → save
-5. Verify + screenshots; restore original pending_sl.json
+1. Scrape TradingView → entry + SL/TP labels
+2. Load GooeyTrade → scan positions with list_open_positions()
+   (the exact same scan code run_phase_b uses)
+3. Seed a pending_sl entry for a target UNSET position
+4. Call run_phase_b(live) → real edit dialog → save, but ONLY if the
+   scraped labels actually match (otherwise correct gating = no apply)
+5. Write phase_b_test_result.json (committed by CI for observability)
 """
 
 import json
@@ -19,19 +21,44 @@ from config import TV_CHART_URL, GOOEYTRADE_URL, SESSION_FILE
 from tv_scraper import scrape_chart, parse_tp_sl_labels, parse_entry_label
 from execution import (
     load_pending_sl, save_pending_sl, PENDING_SL_FILE,
-    SEL_POSITION_ROW, SEL_POSITION_VOLUME,
+    list_open_positions,
 )
 import run as runmod
+
+RESULT_FILE = Path("phase_b_test_result.json")
 
 
 def floor5(dt):
     return dt.replace(minute=(dt.minute // 5) * 5, second=0, microsecond=0)
 
 
+def _ser_pos(p):
+    return {k: v for k, v in p.items() if k != "row"}
+
+
 def main():
+    started = datetime.now(timezone.utc).isoformat()
     print("=" * 60)
     print("  PHASE B LIVE TEST")
     print("=" * 60)
+
+    outcome = {
+        "at": started,
+        "labels": None,
+        "entry": None,
+        "positions": [],
+        "target": None,
+        "expect_apply": False,
+        "applied": False,
+        "pass": False,
+        "note": "",
+    }
+
+    def write_result():
+        outcome["at"] = started
+        RESULT_FILE.write_text(json.dumps(outcome, indent=2, default=str),
+                               encoding="utf-8")
+        print(f"  wrote {RESULT_FILE}")
 
     # ── 1. Scrape TradingView ────────────────────────────────────────────
     print("\n[1] Scraping TradingView...")
@@ -41,20 +68,15 @@ def main():
     tpsl = parse_tp_sl_labels(raw)
     print(f"  entry label:  {entry}")
     print(f"  SL/TP labels: {tpsl}")
+    outcome["labels"] = tpsl
+    outcome["entry"] = entry
 
-    if not tpsl:
-        print("  !! No SL/TP labels readable on chart — dialog test will be "
-              "skipped (gate path still tested)")
-
-    # ── 2. Load GooeyTrade + list positions ──────────────────────────────
-    print("\n[2] Loading GooeyTrade...")
+    # ── 2. Load GooeyTrade + scan positions ──────────────────────────────
+    print("\n[2] Loading GooeyTrade + scanning positions...")
     backup = Path("pending_sl.json.bak")
     if PENDING_SL_FILE.exists():
         shutil.copy2(PENDING_SL_FILE, backup)
         print(f"  backed up pending_sl.json → {backup}")
-
-    result = {"labels": tpsl, "positions": [], "phase_b": None,
-              "after": None}
 
     with sync_playwright() as p:
         import os
@@ -79,67 +101,58 @@ def main():
         except Exception as e:
             page.screenshot(path="debug_phase_b_fail.png")
             print(f"  !! Trade page did not load: {e}")
+            outcome["note"] = f"page load fail: {type(e).__name__}"
             browser.close()
             _restore(backup)
+            write_result()
             print("\nRESULT: SESSION/PAGE LOAD FAIL")
             raise SystemExit(1)
         print("  trade page loaded")
         page.screenshot(path="debug_phase_b_before.png")
 
-        rows = page.locator(SEL_POSITION_ROW)
-        try:
-            rows.first.wait_for(state="visible", timeout=8000)
-        except Exception:
-            print("  !! No open positions on the account — cannot live-test "
-                  "the dialog")
-            browser.close()
-            _restore(backup)
-            print("\nRESULT: NO OPEN POSITION")
-            return
+        positions = list_open_positions(page)
+        outcome["positions"] = [_ser_pos(x) for x in positions]
+        print(f"  scanned {len(positions)} position(s):")
+        for x in positions:
+            print(f"    row#{x['index']} {x['direction']} vol={x['volume']} "
+                  f"entry={x['entry_price']} SL={x['sl_text']!r} "
+                  f"TP={x['tp_text']!r} set={x['sl_set'] and x['tp_set']}")
 
-        positions = []
-        for i in range(rows.count()):
-            row = rows.nth(i)
-            badges = row.locator(".ui-badge")
-            badge_texts = []
-            for bi in range(badges.count()):
-                badge_texts.append(badges.nth(bi).inner_text(timeout=2000).strip())
-            vol_el = row.locator(SEL_POSITION_VOLUME)
-            vol_text = vol_el.first.inner_text(timeout=2000).strip() if vol_el.count() else "?"
-            direction = None
-            for t in badge_texts:
-                tl = t.lower()
-                if tl in ("acheter", "buy", "long"):
-                    direction = "buy"
-                elif tl in ("vendre", "sell", "short"):
-                    direction = "sell"
-            positions.append({"i": i, "badges": badge_texts,
-                              "volume_text": vol_text, "direction": direction})
-        result["positions"] = positions
-        print(f"  open positions: {positions}")
-
-        target = next((x for x in positions if x["direction"]), None)
+        target = next((x for x in positions
+                       if x["direction"] and not (x["sl_set"] and x["tp_set"])),
+                      None)
         if target is None:
-            print("  !! Could not determine direction of any position")
+            outcome["note"] = ("no unset position to test "
+                               "(none open or all already have SL/TP)")
+            outcome["pass"] = True
+            print(f"  !! {outcome['note']}")
             browser.close()
             _restore(backup)
-            print("\nRESULT: NO MATCHABLE POSITION")
+            write_result()
+            print("\nRESULT: NO UNSET POSITION (scan path exercised — PASS)")
             return
 
         direction = target["direction"]
-        try:
-            volume = float(target["volume_text"].replace(",", ""))
-        except ValueError:
-            volume = 2.5
-        print(f"  target: {direction.upper()} volume={volume}")
+        volume = target["volume"] if target["volume"] is not None else 2.5
+        outcome["target"] = _ser_pos(target)
+        print(f"  target: row#{target['index']} {direction.upper()} vol={volume}")
 
-        # ── 3. Seed backdated pending entry (candle already closed) ──────
+        # Expect an apply only if chart labels exist AND match direction.
+        # (Entry-price proximity uses the chart entry; seeded below.)
+        chart_dir = entry["direction"] if entry else None
+        chart_entry = entry["entry_price"] if entry else 0
+        expect = bool(tpsl and chart_dir == direction)
+        outcome["expect_apply"] = expect
+        print(f"  chart_dir={chart_dir} chart_entry={chart_entry} "
+              f"→ expect_apply={expect}")
+
+        # ── 3. Seed pending entry (candle already closed) ────────────────
         now = datetime.now(timezone.utc)
         start = floor5(now - timedelta(minutes=10))
         entries = load_pending_sl()
         entries.append({
             "direction": direction,
-            "entry_price": 0,
+            "entry_price": chart_entry if chart_dir == direction else 0,
             "volume": volume,
             "entry_candle_start": start.isoformat(),
             "resolved": False,
@@ -152,48 +165,31 @@ def main():
         # ── 4. Run Phase B live ──────────────────────────────────────────
         print("\n[3] Running run_phase_b(live)...")
         ok = runmod.run_phase_b(page, raw, dry_run=False, volume=volume)
-        result["phase_b"] = ok
+        outcome["applied"] = bool(ok)
         print(f"  run_phase_b returned: {ok}")
 
         time.sleep(1)
         page.screenshot(path="debug_phase_b_after.png")
+        outcome["pending_after"] = load_pending_sl()
 
-        # ── 5. Verify: re-read pending state + position row ─────────────
-        after = load_pending_sl()
-        result["after"] = after
-        print(f"\n  pending_sl after: {json.dumps(after, indent=2)}")
-
-        rows2 = page.locator(SEL_POSITION_ROW)
-        try:
-            rows2.first.wait_for(state="visible", timeout=5000)
-            r = rows2.nth(target["i"]) if target["i"] < rows2.count() else rows2.first
-            tpsl_cells = r.locator(
-                '[data-testid*="sl"], [data-testid*="tp"], '
-                '[data-testid*="stop"], [data-testid*="take"]')
-            cell_texts = []
-            for ci in range(min(tpsl_cells.count(), 8)):
-                el = tpsl_cells.nth(ci)
-                try:
-                    cell_texts.append({
-                        "testid": el.get_attribute("data-testid"),
-                        "text": el.inner_text(timeout=1500).strip(),
-                    })
-                except Exception:
-                    pass
-            print(f"  position SL/TP cells: {cell_texts}")
-            result["cells"] = cell_texts
-        except Exception as e:
-            print(f"  could not re-read position row: {e}")
-
+        # ── 5. Verdict ───────────────────────────────────────────────────
+        outcome["pass"] = (bool(ok) == expect)
+        if outcome["pass"]:
+            outcome["note"] = ("applied as expected" if ok
+                               else "correctly skipped (no matching labels) — "
+                                    "gating works")
+        else:
+            outcome["note"] = ("MISMATCH: expected apply but nothing applied"
+                               if expect else "unexpected apply")
         browser.close()
 
     _restore(backup)
+    write_result()
     print("\n" + "=" * 60)
-    print(f"  RESULT: phase_b={'PASS' if result['phase_b'] else 'FAIL'}")
-    print(f"  labels={tpsl}  positions={len(result['positions'])}")
-    print("  screenshots: debug_phase_b_before.png / debug_phase_b_after.png")
+    print(f"  RESULT: {'PASS' if outcome['pass'] else 'FAIL'} "
+          f"(applied={outcome['applied']} expect={outcome['expect_apply']})")
     print("=" * 60)
-    if not result["phase_b"]:
+    if not outcome["pass"]:
         raise SystemExit(1)
 
 
