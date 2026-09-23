@@ -1,0 +1,29 @@
+============================================================
+  GooeyTrade Bot
+  Mode: LIVE
+  Trades so far: 2
+  Pending SL/TP: 1 trade(s)
+============================================================
+
+  [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
+  [OCR] Raw text: 'SELL 4301.73\nSL 4310.25\nTP 4276.15\n\nStatus OLD\n'
+  [OCR] Lines: ['SELL 4301.73', 'SL 4310.25', 'TP 4276.15', 'Status OLD']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4301.73, 'sl': 4310.25, 'tp': 4276.15, 'status': 'old'}
+  [TV] Labels found: 5
+       - ATR14RMA1.5highlow
+       - Supertrend1034,284.278∅∅
+       - EMA200close
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+  Trade page loaded.
+
+  [Phase B] No open positions found — nothing to scan
+
+  [Phase A] Entry signal: SELL @ 4301.73 (SL/TP after candle close)
+  [Phase A] Signal status: OLD (>120s) — skipping
+
+  No actionable signals from TradingView this run.
+
+  Waiting 5 seconds before closing...
+
+  Done.
