@@ -64,8 +64,11 @@ def scrape_tv() -> dict | None:
 
 
 def _apply_sl_tp_dialog(page, direction: str, volume: float,
-                        sl: float, tp: float) -> bool:
-    """Open the position edit dialog on GooeyTrade and save SL/TP values."""
+                        sl: float, tp: float) -> str | None:
+    """Open the position edit dialog on GooeyTrade and save SL/TP values.
+
+    Returns None on success, or an error-reason string on failure.
+    """
     from execution import (
         _find_position_row, SEL_POSITION_TPSL_BTN,
         SEL_POSITION_EDIT_DIALOG, SEL_POSITION_EDIT_TOGGLE,
@@ -77,7 +80,7 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
         row = _find_position_row(page, direction, volume)
         if row is None:
             print(f"  [Phase B] Position row not found for {direction.upper()}")
-            return False
+            return f"position row not found ({direction} vol={volume})"
 
         # Click TPSL button to open edit dialog
         print("  [Phase B] Opening SL/TP edit dialog...")
@@ -146,11 +149,11 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
                 pass
 
         print("  [Phase B] Position SL/TP saved!")
-        return True
+        return None
 
     except Exception as e:
         print(f"  [Phase B] ERROR: {e}")
-        return False
+        return f"{type(e).__name__}: {e}"
 
 
 def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
@@ -182,6 +185,8 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
         if elapsed < 5 * 60:
             print(f"  [Phase B] {direction.upper()} entry candle still open "
                   f"({elapsed:.0f}s / 300s) — retrying next run")
+            entry["last_attempt_at"] = now.isoformat()
+            entry["last_error"] = f"candle still open ({elapsed:.0f}s)"
             continue
 
         # Candle closed — scrape SL/TP labels from this run's chart scrape
@@ -189,6 +194,8 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
         if not tpsl:
             print(f"  [Phase B] No SL/TP labels on chart yet for "
                   f"{direction.upper()} @ {entry_price:.2f} — retrying next run")
+            entry["last_attempt_at"] = now.isoformat()
+            entry["last_error"] = "no SL/TP labels on chart (OCR scrape empty)"
             continue
         sl, tp = tpsl["sl"], tpsl["tp"]
 
@@ -199,19 +206,25 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
             print(f"  [DRY RUN] Would edit position SL/TP → SL={sl:.2f}  TP={tp:.2f}")
             entry["resolved"] = True
             entry["resolved_at"] = now.isoformat()
+            entry["last_attempt_at"] = now.isoformat()
+            entry.pop("last_error", None)
             entry["sl"] = sl
             entry["tp"] = tp
             applied_any = True
             continue
 
-        if _apply_sl_tp_dialog(page, direction, trade_volume, sl, tp):
+        err = _apply_sl_tp_dialog(page, direction, trade_volume, sl, tp)
+        entry["last_attempt_at"] = now.isoformat()
+        if err is None:
             entry["resolved"] = True
             entry["resolved_at"] = now.isoformat()
+            entry.pop("last_error", None)
             entry["sl"] = sl
             entry["tp"] = tp
             applied_any = True
         else:
-            print(f"  [Phase B] Failed to apply SL/TP — retrying next run")
+            entry["last_error"] = err
+            print(f"  [Phase B] Failed to apply SL/TP ({err}) — retrying next run")
 
     save_pending_sl(entries)
     return applied_any
