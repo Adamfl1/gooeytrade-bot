@@ -24,8 +24,8 @@
   [Phase B] SELL @ 4262.87: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4274.70 (SL/TP after candle close)
-  [Phase A] Current price: 4274.76
-  [Phase A] Signal too old (1204s > 120s) — skipping
+  [Phase A] Current price: 4277.19
+  [Phase A] Signal too old (1510s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
