@@ -110,8 +110,80 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
         _find_position_row, SEL_POSITION_TPSL_BTN,
         SEL_POSITION_EDIT_DIALOG, SEL_POSITION_EDIT_TOGGLE,
         SEL_POSITION_EDIT_VALUE, SEL_STEPPER_INPUT,
-        SEL_POSITION_EDIT_SAVE,
+        SEL_POSITION_EDIT_SAVE, SEL_POSITION_EDIT_CANCEL,
     )
+
+    def _set_stepper(idx: int, value: float, label: str) -> str:
+        """Type a value into a dialog stepper and force the app to notice.
+
+        Returns the read-back field text.
+        """
+        container = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(idx)
+        stepper = container.locator(SEL_STEPPER_INPUT)
+        stepper.wait_for(state="visible", timeout=5000)
+        stepper.click(click_count=3)
+        time.sleep(0.05)
+        page.keyboard.press("Control+a")
+        page.keyboard.insert_text(str(value))
+        time.sleep(0.1)
+        # Fire the DOM events the app's input component listens to
+        try:
+            stepper.evaluate("""el => {
+                el.dispatchEvent(new Event('input', {bubbles: true}));
+                el.dispatchEvent(new Event('change', {bubbles: true}));
+                el.dispatchEvent(new KeyboardEvent('keyup', {bubbles: true}));
+            }""")
+        except Exception:
+            pass
+        time.sleep(0.2)
+        page.keyboard.press("Tab")
+        time.sleep(0.3)
+        try:
+            shown = stepper.inner_text(timeout=2000).strip()
+        except Exception:
+            shown = "?"
+        print(f"  [Phase B] {label} field shows {shown!r} (wanted {value})")
+        return shown
+
+    def _save_enabled() -> bool:
+        try:
+            return save_btn.get_attribute("disabled") is None
+        except Exception:
+            return False
+
+    dialog = None
+
+    def _close_dialog():
+        if dialog is None:
+            return
+        try:
+            cancel = dialog.locator(SEL_POSITION_EDIT_CANCEL)
+            if cancel.count() > 0:
+                cancel.click()
+                time.sleep(0.5)
+                return
+        except Exception:
+            pass
+        try:
+            page.keyboard.press("Escape")
+            time.sleep(0.5)
+        except Exception:
+            pass
+
+    def _validation_hint() -> str:
+        try:
+            hints = dialog.locator('[class*="error"], [class*="invalid"], [class*="hint"]')
+            texts = []
+            for i in range(min(hints.count(), 4)):
+                try:
+                    t = hints.nth(i).inner_text(timeout=1000).strip()
+                    if t:
+                        texts.append(t[:120])
+                except Exception:
+                    pass
+            return " | ".join(texts)
+        except Exception:
+            return ""
 
     try:
         if row is None:
@@ -128,6 +200,7 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
 
         dialog = page.locator(SEL_POSITION_EDIT_DIALOG)
         dialog.wait_for(state="visible", timeout=5000)
+        save_btn = dialog.locator(SEL_POSITION_EDIT_SAVE)
 
         # Toggle SL and TP ON
         toggles = dialog.locator(SEL_POSITION_EDIT_TOGGLE)
@@ -140,38 +213,39 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
                 time.sleep(0.5)
                 print(f"    Toggled {label} ON")
 
-        # Type SL value
+        # Type SL + TP values (nth(0) = SL, nth(1) = TP)
         print(f"  [Phase B] Setting SL = {sl:.2f}")
-        sl_input = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(0).locator(SEL_STEPPER_INPUT)
-        sl_input.wait_for(state="visible", timeout=5000)
-        sl_input.click(click_count=3)
-        time.sleep(0.05)
-        page.keyboard.press("Control+a")
-        page.keyboard.insert_text(str(sl))
-        time.sleep(0.1)
-        page.keyboard.press("Tab")
-        time.sleep(0.3)
-
-        # Type TP value
+        _set_stepper(0, sl, "SL")
         print(f"  [Phase B] Setting TP = {tp:.2f}")
-        tp_input = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(1).locator(SEL_STEPPER_INPUT)
-        tp_input.wait_for(state="visible", timeout=5000)
-        tp_input.click(click_count=3)
-        time.sleep(0.05)
-        page.keyboard.press("Control+a")
-        page.keyboard.insert_text(str(tp))
-        time.sleep(0.1)
-        page.keyboard.press("Tab")
-        time.sleep(0.3)
+        _set_stepper(1, tp, "TP")
 
-        # Save
-        save_btn = dialog.locator(SEL_POSITION_EDIT_SAVE)
-        save_btn.wait_for(state="visible", timeout=5000)
+        # Wait for the form to register the change (fast-fail, no 30s click)
         start = time.time()
-        while time.time() - start < 5:
-            if save_btn.get_attribute("disabled") is None:
+        while time.time() - start < 8:
+            if _save_enabled():
                 break
             time.sleep(0.3)
+
+        if not _save_enabled():
+            # Last-resort nudge: +/- button forces the component's own handler
+            try:
+                plus = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(0) \
+                    .locator('button[data-testid="input-stepper-horizontal-button"]').last
+                if plus.count() > 0:
+                    plus.click()
+                    time.sleep(0.5)
+                    _set_stepper(0, sl, "SL(retry)")
+                    time.sleep(1)
+            except Exception:
+                pass
+            if not _save_enabled():
+                hint = _validation_hint()
+                _close_dialog()
+                msg = (f"save button stayed disabled after typing "
+                       f"(SL={sl} TP={tp})" + (f" — dialog says: {hint}" if hint else ""))
+                print(f"  [Phase B] {msg}")
+                return msg
+
         save_btn.click()
         time.sleep(2)
 
@@ -191,6 +265,10 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
 
     except Exception as e:
         print(f"  [Phase B] ERROR: {e}")
+        try:
+            _close_dialog()
+        except Exception:
+            pass
         return f"{type(e).__name__}: {e}"
 
 
