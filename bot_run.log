@@ -1,48 +1,41 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 4
-  Pending SL/TP: 2 trade(s)
+  Trades so far: 5
+  Pending SL/TP: 3 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4265.03\nSL -\n1? -\n\nStatus FRESH\n'
-  [OCR] Lines: ['SELL 4265.03', 'SL -', '1? -', 'Status FRESH']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.03, 'status': 'fresh'}
+  [OCR] Raw text: 'SELL 4265.03\nSL 4272.99\nTP 4241.16\n\nStatus OLD\n'
+  [OCR] Lines: ['SELL 4265.03', 'SL 4272.99', 'TP 4241.16', 'Status OLD']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.03, 'sl': 4272.99, 'tp': 4241.16, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend103∅4,279.367∅
+       - Supertrend103∅4,277.722∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] No open positions found — nothing to scan
+  [Phase B] Scanning 1 open position(s) for unset TP/SL...
+  [Phase B] SELL @ 4262.87: TP/SL unset (SL='-' TP='-') — checking chart labels...
+  [Phase B] SELL @ 4262.87: matching SL/TP label found! SL=4272.99 TP=4241.16 — applying...
+  [Phase B] Opening SL/TP edit dialog...
+  [Phase B] Setting SL = 4272.99
+  [Phase B] SL field initially shows '4262.49'
+  [Phase B] SL field shows '4272.99' (wanted 4272.99)
+  [Phase B] Setting TP = 4241.16
+  [Phase B] TP field initially shows '4262.05'
+  [Phase B] TP field shows '4241.16' (wanted 4241.16)
+  [Phase B] SL(retry) field initially shows '4273.00'
+  [Phase B] SL(retry) field shows '4272.99' (wanted 4272.99)
+  [Phase B] save button stayed disabled after typing (SL=4272.99 TP=4241.16)
+  [Phase B] SELL @ 4262.87: failed to apply SL/TP (save button stayed disabled after typing (SL=4272.99 TP=4241.16)) — retrying next run
 
   [Phase A] Entry signal: SELL @ 4265.03 (SL/TP after candle close)
-  [Phase A] Signal status: FRESH (<120s)
-  [Phase A] Current price: 4263.35
-  [Phase A] Signal first seen — 120s timer started
+  [Phase A] Signal status: OLD (>120s) — skipping
 
-  SIGNAL (TradingView)
-  Direction:  SELL
-  Entry:      4265.03
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING SELL MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4262.84
-  Submitting SELL MARKET order...
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4262.84
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
