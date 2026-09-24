@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4283.79\nSL 4296.37\nTP 4246.05\n\nStatus OLD\n'
-  [OCR] Lines: ['SELL 4283.79', 'SL 4296.37', 'TP 4246.05', 'Status OLD']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4283.79, 'sl': 4296.37, 'tp': 4246.05, 'status': 'old'}
+  [OCR] Raw text: 'SELL 4284.2\nSL -\n1? -\n\nStatus FRESH\n'
+  [OCR] Lines: ['SELL 4284.2', 'SL -', '1? -', 'Status FRESH']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,284.853∅∅
+       - Supertrend103∅4,295.927∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -19,51 +19,32 @@
 
   [Phase B] Scanning 1 open position(s) for unset TP/SL...
   [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
-  [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4296.37 TP=4246.05 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4296.37
-  [Phase B] Setting TP = 4246.05
-  [Phase B] ERROR: Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
+  [Phase B] SELL (entry unknown): no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
-  [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
-) — retrying next run
+  [Phase A] Entry signal: SELL @ 4284.20 (SL/TP after candle close)
+  [Phase A] Signal status: FRESH (<120s)
+  [Phase A] Current price: 4284.74
+  [Phase A] Signal first seen — 120s timer started
 
-  [Phase A] Entry signal: SELL @ 4283.79 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  SIGNAL (TradingView)
+  Direction:  SELL
+  Entry:      4284.20
+  SL/TP:      (will be applied on next candle)
 
-  No actionable signals from TradingView this run.
+
+  === EXECUTING SELL MARKET ===
+  SL/TP:        (will be added on next candle)
+  Volume:       2.5
+  Dry Run:      False
+
+  Opening advanced order panel...
+  Setting volume to 2.5...
+  Live price at submission: 4284.41
+  Submitting SELL MARKET order...
+  Order confirmed via popup
+  Market order submitted successfully.
+
+  Trade opened. Live price: 4284.41
 
   Waiting 5 seconds before closing...
 
