@@ -4,11 +4,13 @@
     "entry_price": 4298.69,
     "volume": 2.5,
     "entry_candle_start": "2026-09-23T13:10:00+00:00",
-    "resolved": false,
+    "resolved": true,
     "opened_at": "2026-09-23T13:11:28+00:00",
     "migrated_from": "bot_state.pending_tp_sl",
-    "last_attempt_at": "2026-09-24T06:56:16.387929+00:00",
-    "last_error": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-testid=\\\"open-positions-desktop-list-row\\\"]\").nth(1).locator(\"[data-testid=\\\"open-positions-desktop-tpsl-btn\\\"]\")\n"
+    "last_attempt_at": "2026-09-24T07:01:15.761047+00:00",
+    "resolved_at": "2026-09-24T07:01:15.761047+00:00",
+    "sl": 4292.44,
+    "tp": 4259.47
   },
   {
     "direction": "sell",

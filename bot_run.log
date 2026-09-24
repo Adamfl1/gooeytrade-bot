@@ -11,42 +11,24 @@
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'sl': 4292.44, 'tp': 4259.47, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend103∅4,289.245∅
+       - Supertrend103∅4,287.922∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] Scanning 2 open position(s) for unset TP/SL...
+  [Phase B] Scanning 1 open position(s) for unset TP/SL...
   [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
   [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4292.44 TP=4259.47 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4292.44
   [Phase B] Setting TP = 4259.47
-  [Phase B] ERROR: Locator.get_attribute: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-
-  [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.get_attribute: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-) — retrying next run
-  [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
-  [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4292.44 TP=4259.47 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] ERROR: Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"open-positions-desktop-list-row\"]").nth(1).locator("[data-testid=\"open-positions-desktop-tpsl-btn\"]")
-
-  [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator("[data-testid=\"open-positions-desktop-list-row\"]").nth(1).locator("[data-testid=\"open-positions-desktop-tpsl-btn\"]")
-) — retrying next run
+  [Phase B] Confirmed!
+  [Phase B] Position SL/TP saved!
+  [Phase B] SELL (entry unknown): SL/TP applied successfully!
 
   [Phase A] Entry signal: SELL @ 4284.20 (SL/TP after candle close)
   [Phase A] Signal status: OLD (>120s) — skipping
-
-  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
