@@ -7,7 +7,7 @@
     "resolved": false,
     "opened_at": "2026-09-23T13:11:28+00:00",
     "migrated_from": "bot_state.pending_tp_sl",
-    "last_attempt_at": "2026-09-24T05:06:14.772997+00:00",
+    "last_attempt_at": "2026-09-24T05:11:42.454054+00:00",
     "last_error": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-testid=\\\"dialog-wrapper\\\"]\").locator(\"[data-testid=\\\"position-edit-dialog-save-btn\\\"]\")\n    - locator resolved to <button disabled size=\"sm\" ui-button=\"\" type=\"button\" data-testid=\"position-edit-dialog-save-btn\" class=\"trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation\">\u2026</button>\n  - attempting click action\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    56 \u00d7 waiting for element to be visible, enabled and stable\n       - element is not enabled\n     - retrying click action\n       - waiting 500ms\n"
   },
   {
