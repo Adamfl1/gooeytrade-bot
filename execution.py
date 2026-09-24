@@ -7,6 +7,7 @@ edits open positions to add SL/TP after the entry candle closes.
 """
 
 import json
+import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -43,6 +44,8 @@ SEL_STEPPER_MINUS = '[data-testid="input-stepper-horizontal-button"]'
 SEL_POSITION_ROW = '[data-testid="open-positions-desktop-list-row"]'
 SEL_POSITION_VOLUME = '[data-testid="open-position-volume"]'
 SEL_POSITION_TPSL_BTN = '[data-testid="open-positions-desktop-tpsl-btn"]'
+# TP/SL column cells inside a position row ("-" = unset side)
+SEL_POSITION_SECURITY = '[data-testid="security-orders"]'
 
 # Position edit dialog (SL/TP)
 SEL_POSITION_EDIT_DIALOG = '[data-testid="dialog-wrapper"]'
@@ -463,9 +466,13 @@ def _find_position_row(page: Page, direction: str, volume: float,
 
 
 def _read_entry_price_from_row(row) -> float | None:
-    """Try to read the entry price from an open-position row DOM.
+    """Try to read the entry (open) price from an open-position row DOM.
 
-    Probes several likely selectors; returns None if nothing works.
+    Probes known testids first, then falls back to a structural probe: the
+    open-price column is the <ui-list-row-item> with no data-testid of its
+    own and no TP/SL, profit, or symbol content (per live DOM:
+    symbol / volume / open-price / TP-SL / profit / actions).
+    Returns None if nothing works.
     """
     for sel in [
         '[data-testid="open-position-entry-price"]',
@@ -480,15 +487,93 @@ def _read_entry_price_from_row(row) -> float | None:
                 return float(text.replace(",", ""))
             except (ValueError, Exception):
                 continue
+    try:
+        items = row.locator("ui-list-row-item")
+        for i in range(min(items.count(), 12)):
+            item = items.nth(i)
+            try:
+                if item.get_attribute("data-testid"):
+                    continue  # volume cell etc.
+                html = item.inner_html(timeout=1500)
+            except Exception:
+                continue
+            if ("security-orders" in html or "open-position-profit" in html
+                    or "instrument-symbol-name" in html or "ui-badge" in html
+                    or "button" in html):
+                continue  # TP/SL, profit, symbol, or action cell
+            try:
+                text = item.inner_text(timeout=1500).strip().replace(",", "")
+            except Exception:
+                continue
+            try:
+                return float(text)
+            except ValueError:
+                continue
+    except Exception:
+        pass
     return None
+
+
+def _read_security_orders(row) -> tuple[str | None, str | None]:
+    """Read the live TP/SL column state from [data-testid="security-orders"]
+    cells inside a position row.
+
+    An unset side shows "-" (or empty). Cell text may carry labels
+    ("TP: -" / "SL: 123.45" on one or more lines) or be bare values.
+    Returns (tp_text, sl_text); each is None if no cell was found.
+    """
+    cells = row.locator(SEL_POSITION_SECURITY)
+    try:
+        n = cells.count()
+    except Exception:
+        return None, None
+    texts: list[str] = []
+    for i in range(min(n, 10)):
+        try:
+            t = cells.nth(i).inner_text(timeout=1500).strip()
+        except Exception:
+            continue
+        if t:
+            texts.append(t)
+    if not texts:
+        return None, None
+
+    tp_text, sl_text = None, None
+    unlabeled: list[str] = []
+    for text in texts:
+        labeled = False
+        for line in text.splitlines():
+            t = line.strip()
+            if re.match(r"(?i)^TP\b", t):
+                tp_text = re.sub(r"(?i)^TP\s*:?\s*", "", t).strip()
+                labeled = True
+            elif re.match(r"(?i)^SL\b", t):
+                sl_text = re.sub(r"(?i)^SL\s*:?\s*", "", t).strip()
+                labeled = True
+        if not labeled:
+            unlabeled.append(text)
+    if tp_text is None and unlabeled:
+        # Bare values without labels — document order is TP, then SL
+        # (matches the "TP/SL" column header).
+        tp_text = unlabeled.pop(0)
+    if sl_text is None and unlabeled:
+        sl_text = unlabeled.pop(0)
+    return tp_text, sl_text
 
 
 def _read_sl_tp_from_row(row) -> tuple[str | None, str | None]:
     """Read the displayed SL/TP cell texts from an open-position row.
 
+    Primary source of truth: [data-testid="security-orders"] cells
+    ("-" = unset). Falls back to the legacy fuzzy testid probe only when
+    no security-orders cell exists in the row.
+
     Returns (sl_text, tp_text); each is None if no matching cell was found.
     Unset cells typically show "-" / "—" / "".
     """
+    tp_t, sl_t = _read_security_orders(row)
+    if tp_t is not None or sl_t is not None:
+        return sl_t, tp_t
     sl_text, tp_text = None, None
     cands = row.locator(
         '[data-testid*="sl"], [data-testid*="stop"], '
@@ -536,12 +621,39 @@ def _sl_tp_value_is_set(text: str | None) -> bool:
         return False
 
 
+def ensure_positions_tab(page: Page) -> None:
+    """Make sure the Open Positions / Positions ouvertes tab is active so the
+    position rows render. No-op if rows are already visible."""
+    try:
+        rows = page.locator(SEL_POSITION_ROW)
+        if rows.count() > 0 and rows.first.is_visible():
+            return
+    except Exception:
+        pass
+    for name in ("Positions ouvertes", "Open Positions"):
+        try:
+            tab = page.get_by_text(name, exact=False)
+            if tab.count() > 0:
+                tab.first.click(timeout=5000)
+                page.wait_for_timeout(800)
+                return
+        except Exception:
+            continue
+
+
 def list_open_positions(page: Page, timeout: int = 8000) -> list[dict]:
-    """Scan ALL open-position rows on the trade page.
+    """Scan ALL live open-position rows on the trade page.
+
+    This is the ONLY source of truth for "what needs work": the TP/SL column
+    state is read from each row's [data-testid="security-orders"] cells.
+    A row is a candidate needing SL/TP only when BOTH sides show "-"
+    (needs_sl_tp=True).
 
     Returns a list of dicts: {index, direction, volume, entry_price,
-    sl_text, tp_text, sl_set, tp_set, row}. Empty list if none visible.
+    sl_text, tp_text, sl_set, tp_set, needs_sl_tp, row}.
+    Empty list if none visible.
     """
+    ensure_positions_tab(page)
     rows = page.locator(SEL_POSITION_ROW)
     try:
         rows.first.wait_for(state="visible", timeout=timeout)
@@ -582,6 +694,8 @@ def list_open_positions(page: Page, timeout: int = 8000) -> list[dict]:
             volume = None
         entry_price = _read_entry_price_from_row(row)
         sl_text, tp_text = _read_sl_tp_from_row(row)
+        sl_set = _sl_tp_value_is_set(sl_text)
+        tp_set = _sl_tp_value_is_set(tp_text)
         positions.append({
             "index": i,
             "direction": direction,
@@ -589,8 +703,10 @@ def list_open_positions(page: Page, timeout: int = 8000) -> list[dict]:
             "entry_price": entry_price,
             "sl_text": sl_text,
             "tp_text": tp_text,
-            "sl_set": _sl_tp_value_is_set(sl_text),
-            "tp_set": _sl_tp_value_is_set(tp_text),
+            "sl_set": sl_set,
+            "tp_set": tp_set,
+            # Candidate needing SL/TP: BOTH sides "-" in the live row.
+            "needs_sl_tp": not sl_set and not tp_set,
             "row": row,
         })
     return positions

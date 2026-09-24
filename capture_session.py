@@ -35,13 +35,14 @@ def main():
         page = context.new_page()
 
         page.goto(GOOEYTRADE_URL)
-        input("Press Enter after you are logged in...")
 
-        # Verify we're on the trade page by checking for buy/sell buttons
+        # Auto-detect login: wait for the trade page buy button (up to 5 min)
+        print("Log in to GooeyTrade in the browser window...")
+        print("Waiting for trade page to load (auto-detects login)...")
         try:
             page.wait_for_selector(
                 '[data-testid="order-panel-buy-button"]',
-                timeout=5000,
+                timeout=300000,
             )
             print("Buy button found — session looks good!")
         except Exception:

@@ -296,7 +296,13 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
 
 def _find_matching_pending(entries: list[dict], direction: str,
                            volume: float | None):
-    """Find an unresolved pending_sl entry for direction + volume (audit only)."""
+    """Find an unresolved pending_sl entry for direction + volume.
+
+    AUDIT ONLY — the result is used solely to stamp logging fields
+    (resolved / last_attempt_at / last_error / sl / tp). It never gates
+    which positions are scanned or edited; those decisions come only from
+    the live GooeyTrade rows.
+    """
     for e in entries:
         if e.get("resolved"):
             continue
@@ -314,14 +320,14 @@ def _find_matching_pending(entries: list[dict], direction: str,
 
 
 def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
-    """Phase B: scan ALL open positions; for every row where BOTH TP and SL
-    show "-" (unset), require a matching SL+TP label pair on the TradingView
-    chart (same direction + entry price) before applying anything.
+    """Phase B: scan ALL live open positions; for every row where BOTH TP and
+    SL show "-" (unset), require a matching SL+TP label pair on the
+    TradingView chart (same direction + entry price) before applying anything.
 
-    pending_sl.json is NOT the source of truth here — it is only an audit
-    trail (last_attempt_at / last_error / resolved flags). The decision to
-    edit a position comes from: (1) row shows TP/SL unset, AND (2) a matching
-    SL+TP label pair is currently scraped from the chart.
+    The live GooeyTrade row list is the ONLY source of truth for "what needs
+    work". pending_sl.json is audit/history only — it is written (resolved
+    flags, last_attempt_at, last_error) but NEVER influences which positions
+    get scanned or edited.
 
     Returns True if SL/TP was applied to any position.
     """
@@ -353,9 +359,9 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
                   f"direction unreadable — skipping")
             continue
 
-        # Row already has TP/SL set → nothing to do
-        if pos["sl_set"] and pos["tp_set"]:
-            print(f"  [Phase B] {tag}: TP/SL already set "
+        # Row already has TP and/or SL set → nothing to do (audit only)
+        if pos["sl_set"] or pos["tp_set"]:
+            print(f"  [Phase B] {tag}: TP/SL already present "
                   f"(SL={sl_text} TP={tp_text}) — skipping")
             pending = _find_matching_pending(entries, direction, vol)
             if pending is not None and not pending.get("resolved"):
@@ -364,13 +370,14 @@ def run_phase_b(page, raw: dict, dry_run: bool, volume: float) -> bool:
                 pending.pop("last_error", None)
             continue
 
-        # Candidate: at least one of TP/SL shows "-" (unset)
+        # Candidate: BOTH TP and SL show "-" in the live row
         print(f"  [Phase B] {tag}: TP/SL unset "
               f"(SL={sl_text!r} TP={tp_text!r}) — checking chart labels...")
 
-        # Entry price for matching: row first, pending record as fallback
+        # Entry price for proximity matching comes ONLY from the live row.
+        # pending_sl.json is audit-only and never influences matching.
         pending = _find_matching_pending(entries, direction, vol)
-        match_entry = row_entry or (pending.get("entry_price", 0) if pending else 0) or 0
+        match_entry = row_entry or 0
 
         # Require an actual SL label AND TP label for this direction+entry —
         # a BUY/SELL entry label alone is NEVER enough.
