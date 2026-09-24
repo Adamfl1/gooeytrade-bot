@@ -19,8 +19,8 @@
     "entry_candle_start": "2026-09-24T01:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T01:51:27.151655+00:00",
-    "last_attempt_at": "2026-09-24T08:16:21.472999+00:00",
-    "last_error": "save button stayed disabled after typing (SL=4292.44 TP=4259.47)"
+    "last_attempt_at": "2026-09-24T08:21:30.467279+00:00",
+    "last_error": "no match yet: SL/TP label pair not on chart yet (candle still open or not formed)"
   },
   {
     "direction": "sell",

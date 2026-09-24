@@ -6,31 +6,14 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4284.2\nSL 4292.44\nTP 4259.47\n\nStatus OLD\n'
-  [OCR] Lines: ['SELL 4284.2', 'SL 4292.44', 'TP 4259.47', 'Status OLD']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'sl': 4292.44, 'tp': 4259.47, 'status': 'old'}
-  [TV] Labels found: 5
-       - ATR14RMA1.5highlow
-       - Supertrend103∅4,289.168∅
-       - EMA200close
-       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
-       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+  [scraper] Timeout waiting for chart to load
+  [TV] Labels found: 0
   Trade page loaded.
 
   [Phase B] Scanning 1 open position(s) for unset TP/SL...
   [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
-  [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4292.44 TP=4259.47 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4292.44
-  [Phase B] SL field shows '4292.44' (wanted 4292.44)
-  [Phase B] Setting TP = 4259.47
-  [Phase B] TP field shows '4259.47' (wanted 4259.47)
-  [Phase B] SL(retry) field shows '4292.44' (wanted 4292.44)
-  [Phase B] save button stayed disabled after typing (SL=4292.44 TP=4259.47)
-  [Phase B] SELL (entry unknown): failed to apply SL/TP (save button stayed disabled after typing (SL=4292.44 TP=4259.47)) — retrying next run
-
-  [Phase A] Entry signal: SELL @ 4284.20 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase B] SELL (entry unknown): no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase A] No entry signal on chart
 
   No actionable signals from TradingView this run.
 
