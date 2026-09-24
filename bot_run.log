@@ -15,15 +15,5 @@
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
-  Trade page loaded.
-
-  [Phase B] No open positions found — nothing to scan
-
-  [Phase A] Entry signal: BUY @ 4274.70 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
-
-  No actionable signals from TradingView this run.
-
-  Waiting 5 seconds before closing...
-
-  Done.
+  ERROR: Trade page did not load. Session may be expired.
+  Run: python capture_session.py
