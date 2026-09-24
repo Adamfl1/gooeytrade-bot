@@ -11,7 +11,7 @@
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.03, 'sl': 4272.99, 'tp': 4241.16, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend103∅4,269.368∅
+       - Supertrend103∅4,266.219∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4262.87: matching SL/TP label found! SL=4272.99 TP=4241.16 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4272.99
-  [Phase B] SL field initially shows '4253.51'
+  [Phase B] SL field initially shows '4251.41'
   [Phase B] SL field shows '4272.99' (wanted 4272.99)
   [Phase B] Setting TP = 4241.16
-  [Phase B] TP field initially shows '4253.14'
+  [Phase B] TP field initially shows '4251.04'
   [Phase B] TP field shows '4241.16' (wanted 4241.16)
   [Phase B] SL(retry) field initially shows '4273.00'
   [Phase B] SL(retry) field shows '4272.99' (wanted 4272.99)
