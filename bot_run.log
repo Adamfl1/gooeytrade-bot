@@ -11,7 +11,7 @@
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4283.79, 'sl': 4296.37, 'tp': 4246.05, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,277.755∅∅
+       - Supertrend1034,279.560∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
