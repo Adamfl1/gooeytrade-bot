@@ -11,7 +11,7 @@
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'sl': 4292.44, 'tp': 4259.47, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend103∅4,288.743∅
+       - Supertrend103∅4,289.245∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -23,82 +23,24 @@
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4292.44
   [Phase B] Setting TP = 4259.47
-  [Phase B] ERROR: Locator.click: Timeout 30000ms exceeded.
+  [Phase B] ERROR: Locator.get_attribute: Timeout 30000ms exceeded.
 Call log:
   - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
 
-  [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.click: Timeout 30000ms exceeded.
+  [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.get_attribute: Timeout 30000ms exceeded.
 Call log:
   - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
 ) — retrying next run
   [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
   [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4292.44 TP=4259.47 — applying...
   [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4292.44
-  [Phase B] Setting TP = 4259.47
   [Phase B] ERROR: Locator.click: Timeout 30000ms exceeded.
 Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
+  - waiting for locator("[data-testid=\"open-positions-desktop-list-row\"]").nth(1).locator("[data-testid=\"open-positions-desktop-tpsl-btn\"]")
 
   [Phase B] SELL (entry unknown): failed to apply SL/TP (TimeoutError: Locator.click: Timeout 30000ms exceeded.
 Call log:
-  - waiting for locator("[data-testid=\"dialog-wrapper\"]").locator("[data-testid=\"position-edit-dialog-save-btn\"]")
-    - locator resolved to <button disabled size="sm" ui-button="" type="button" data-testid="position-edit-dialog-save-btn" class="trade-open-position-tp-sl-edit__desktop-action-button ui-button ui-button__primary--default ui-button--sm ui-button--animation">…</button>
-  - attempting click action
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-    - waiting 20ms
-    2 × waiting for element to be visible, enabled and stable
-      - element is not enabled
-    - retrying click action
-      - waiting 100ms
-    56 × waiting for element to be visible, enabled and stable
-       - element is not enabled
-     - retrying click action
-       - waiting 500ms
+  - waiting for locator("[data-testid=\"open-positions-desktop-list-row\"]").nth(1).locator("[data-testid=\"open-positions-desktop-tpsl-btn\"]")
 ) — retrying next run
 
   [Phase A] Entry signal: SELL @ 4284.20 (SL/TP after candle close)
