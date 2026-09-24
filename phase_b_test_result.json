@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-24T07:02:32.774615+00:00",
+  "at": "2026-09-24T10:55:53.239235+00:00",
   "labels": {
     "sl": 4292.44,
     "tp": 4259.47
@@ -8,72 +8,10 @@
     "direction": "sell",
     "entry_price": 4284.2
   },
-  "positions": [
-    {
-      "index": 0,
-      "direction": "sell",
-      "volume": 2.5,
-      "entry_price": null,
-      "sl_text": null,
-      "tp_text": null,
-      "sl_set": false,
-      "tp_set": false
-    }
-  ],
-  "target": {
-    "index": 0,
-    "direction": "sell",
-    "volume": 2.5,
-    "entry_price": null,
-    "sl_text": null,
-    "tp_text": null,
-    "sl_set": false,
-    "tp_set": false
-  },
-  "expect_apply": true,
+  "positions": [],
+  "target": null,
+  "expect_apply": false,
   "applied": false,
-  "pass": false,
-  "note": "MISMATCH: expected apply but nothing applied",
-  "pending_after": [
-    {
-      "direction": "sell",
-      "entry_price": 4298.69,
-      "volume": 2.5,
-      "entry_candle_start": "2026-09-23T13:10:00+00:00",
-      "resolved": true,
-      "opened_at": "2026-09-23T13:11:28+00:00",
-      "migrated_from": "bot_state.pending_tp_sl",
-      "last_attempt_at": "2026-09-24T07:01:15.761047+00:00",
-      "resolved_at": "2026-09-24T07:01:15.761047+00:00",
-      "sl": 4292.44,
-      "tp": 4259.47
-    },
-    {
-      "direction": "sell",
-      "entry_price": 4282.28,
-      "volume": 2.5,
-      "entry_candle_start": "2026-09-24T01:50:00+00:00",
-      "resolved": false,
-      "opened_at": "2026-09-24T01:51:27.151655+00:00",
-      "last_attempt_at": "2026-09-24T07:02:55.969659+00:00",
-      "last_error": "save button stayed disabled after typing (SL=4292.44 TP=4259.47)"
-    },
-    {
-      "direction": "sell",
-      "entry_price": 4284.41,
-      "volume": 2.5,
-      "entry_candle_start": "2026-09-24T05:40:00+00:00",
-      "resolved": false,
-      "opened_at": "2026-09-24T05:41:27.311543+00:00"
-    },
-    {
-      "direction": "sell",
-      "entry_price": 4284.2,
-      "volume": 2.5,
-      "entry_candle_start": "2026-09-24T06:50:00+00:00",
-      "resolved": false,
-      "opened_at": "2026-09-24T07:02:55.873030+00:00",
-      "test": true
-    }
-  ]
+  "pass": true,
+  "note": "no unset position to test (none open or all already have SL/TP)"
 }
