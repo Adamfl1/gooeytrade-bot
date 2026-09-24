@@ -4,10 +4,28 @@
     "entry_price": 4298.69,
     "volume": 2.5,
     "entry_candle_start": "2026-09-23T13:10:00+00:00",
-    "resolved": false,
+    "resolved": true,
     "opened_at": "2026-09-23T13:11:28+00:00",
     "migrated_from": "bot_state.pending_tp_sl",
-    "last_attempt_at": "2026-09-23T22:21:27.036967+00:00",
-    "last_error": "position row not found (sell vol=2.5)"
+    "last_attempt_at": "2026-09-24T07:01:15.761047+00:00",
+    "resolved_at": "2026-09-24T07:01:15.761047+00:00",
+    "sl": 4292.44,
+    "tp": 4259.47
+  },
+  {
+    "direction": "sell",
+    "entry_price": 4282.28,
+    "volume": 2.5,
+    "entry_candle_start": "2026-09-24T01:50:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-09-24T01:51:27.151655+00:00"
+  },
+  {
+    "direction": "sell",
+    "entry_price": 4284.41,
+    "volume": 2.5,
+    "entry_candle_start": "2026-09-24T05:40:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-09-24T05:41:27.311543+00:00"
   }
 ]

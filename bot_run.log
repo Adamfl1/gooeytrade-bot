@@ -1,0 +1,35 @@
+============================================================
+  GooeyTrade Bot
+  Mode: LIVE
+  Trades so far: 4
+  Pending SL/TP: 3 trade(s)
+============================================================
+
+  [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
+  [OCR] Raw text: 'SELL 4284.2\nSL 4292.44\nTP 4259.47\n\nStatus OLD\n'
+  [OCR] Lines: ['SELL 4284.2', 'SL 4292.44', 'TP 4259.47', 'Status OLD']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'sl': 4292.44, 'tp': 4259.47, 'status': 'old'}
+  [TV] Labels found: 5
+       - ATR14RMA1.5highlow
+       - Supertrend103∅4,287.922∅
+       - EMA200close
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+  Trade page loaded.
+
+  [Phase B] Scanning 1 open position(s) for unset TP/SL...
+  [Phase B] SELL (entry unknown): TP/SL unset (SL=None TP=None) — checking chart labels...
+  [Phase B] SELL (entry unknown): matching SL/TP label found! SL=4292.44 TP=4259.47 — applying...
+  [Phase B] Opening SL/TP edit dialog...
+  [Phase B] Setting SL = 4292.44
+  [Phase B] Setting TP = 4259.47
+  [Phase B] Confirmed!
+  [Phase B] Position SL/TP saved!
+  [Phase B] SELL (entry unknown): SL/TP applied successfully!
+
+  [Phase A] Entry signal: SELL @ 4284.20 (SL/TP after candle close)
+  [Phase A] Signal status: OLD (>120s) — skipping
+
+  Waiting 5 seconds before closing...
+
+  Done.
