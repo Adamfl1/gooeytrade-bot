@@ -114,18 +114,28 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
     )
 
     def _set_stepper(idx: int, value: float, label: str) -> str:
-        """Type a value into a dialog stepper and force the app to notice.
+        """Type a value into a dialog stepper like a human (trusted key
+        events) so the app's input component registers the change.
 
         Returns the read-back field text.
         """
         container = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(idx)
         stepper = container.locator(SEL_STEPPER_INPUT)
         stepper.wait_for(state="visible", timeout=5000)
+        try:
+            initial = stepper.inner_text(timeout=2000).strip()
+        except Exception:
+            initial = "?"
+        print(f"  [Phase B] {label} field initially shows {initial!r}")
         stepper.click(click_count=3)
         time.sleep(0.05)
         page.keyboard.press("Control+a")
-        page.keyboard.insert_text(str(value))
+        time.sleep(0.05)
+        page.keyboard.press("Backspace")
         time.sleep(0.1)
+        # Human-like typing: trusted per-key events the component listens to
+        page.keyboard.type(str(value), delay=60)
+        time.sleep(0.2)
         # Fire the DOM events the app's input component listens to
         try:
             stepper.evaluate("""el => {
@@ -227,17 +237,29 @@ def _apply_sl_tp_dialog(page, direction: str, volume: float,
             time.sleep(0.3)
 
         if not _save_enabled():
-            # Last-resort nudge: +/- button forces the component's own handler
+            # Fallback 1: press Enter in each field (some forms commit on Enter)
             try:
-                plus = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(0) \
-                    .locator('button[data-testid="input-stepper-horizontal-button"]').last
-                if plus.count() > 0:
-                    plus.click()
-                    time.sleep(0.5)
-                    _set_stepper(0, sl, "SL(retry)")
+                for idx in (0, 1):
+                    fld = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(idx) \
+                        .locator(SEL_STEPPER_INPUT)
+                    fld.click()
+                    time.sleep(0.2)
+                    page.keyboard.press("Enter")
                     time.sleep(1)
             except Exception:
                 pass
+            # Fallback 2: +/- button forces the component's own handler
+            if not _save_enabled():
+                try:
+                    plus = dialog.locator(SEL_POSITION_EDIT_VALUE).nth(0) \
+                        .locator('button[data-testid="input-stepper-horizontal-button"]').last
+                    if plus.count() > 0:
+                        plus.click()
+                        time.sleep(0.5)
+                        _set_stepper(0, sl, "SL(retry)")
+                        time.sleep(1)
+                except Exception:
+                    pass
             if not _save_enabled():
                 hint = _validation_hint()
                 _close_dialog()
