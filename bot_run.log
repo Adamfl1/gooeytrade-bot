@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4284.2\n\nSL 4292.44\n\nTP 4259.47\nStatus OLD :\n=\n'
-  [OCR] Lines: ['SELL 4284.2', 'SL 4292.44', 'TP 4259.47', 'Status OLD :', '=']
+  [OCR] Raw text: 'SELL 4284.2\nSL 4292.44\nTP 4259.47\n\nStatus OLD\n'
+  [OCR] Lines: ['SELL 4284.2', 'SL 4292.44', 'TP 4259.47', 'Status OLD']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4284.2, 'sl': 4292.44, 'tp': 4259.47, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,267.410∅∅
+       - Supertrend1034,266.376∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
