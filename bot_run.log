@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4265.03 a\nSL 4272.99\nTP 4241.16\nStatus OLD\n'
-  [OCR] Lines: ['SELL 4265.03 a', 'SL 4272.99', 'TP 4241.16', 'Status OLD']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.03, 'sl': 4272.99, 'tp': 4241.16, 'status': 'old'}
+  [OCR] Raw text: 'suy a7 ©\nSL -\n1? -\n\nStatus FRESH\n'
+  [OCR] Lines: ['suy a7 ©', 'SL -', '1? -', 'Status FRESH']
+  [OCR] Parsed: {'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,246.745∅∅
+       - Supertrend1034,254.949∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -19,21 +19,8 @@
 
   [Phase B] Scanning 1 open position(s) for unset TP/SL...
   [Phase B] SELL @ 4262.87: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4262.87: matching SL/TP label found! SL=4272.99 TP=4241.16 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4272.99
-  [Phase B] SL field initially shows '4270.07'
-  [Phase B] SL field shows '4272.99' (wanted 4272.99)
-  [Phase B] Setting TP = 4241.16
-  [Phase B] TP field initially shows '4268.22'
-  [Phase B] TP field shows '4241.16' (wanted 4241.16)
-  [Phase B] SL(retry) field initially shows '4273.77'
-  [Phase B] SL(retry) field shows '4272.99' (wanted 4272.99)
-  [Phase B] save button stayed disabled after typing (SL=4272.99 TP=4241.16)
-  [Phase B] SELL @ 4262.87: failed to apply SL/TP (save button stayed disabled after typing (SL=4272.99 TP=4241.16)) — retrying next run
-
-  [Phase A] Entry signal: SELL @ 4265.03 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase B] SELL @ 4262.87: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase A] No entry signal on chart
 
   No actionable signals from TradingView this run.
 
