@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4278.69\nSL 4271.6\nTP 4299.95\n| Status...... OLD.\nA | GB\n'
-  [OCR] Lines: ['BUY 4278.69', 'SL 4271.6', 'TP 4299.95', '| Status...... OLD.', 'A | GB']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4278.69, 'sl': 4271.6, 'tp': 4299.95, 'status': 'old'}
+  [OCR] Raw text: "BUY 4278.69\nSL 42716\nTP 4299.95\n4. Status, OLD\n' 4\n] 5\n"
+  [OCR] Lines: ['BUY 4278.69', 'SL 42716', 'TP 4299.95', '4. Status, OLD', "' 4", '] 5']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4278.69, 'sl': 42716.0, 'tp': 4299.95, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,297.563∅∅
+       - Supertrend1034,299.336∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
