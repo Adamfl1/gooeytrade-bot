@@ -125,8 +125,20 @@ def wait_for_button_enabled(page: Page, selector: str, timeout: int = 15000) -> 
 
 
 def submit_order(page: Page, direction: str, timeout: int = 15000) -> bool:
-    """Click the buy/sell button, handle confirmation dialog, wait for fill."""
-    selector = SEL_BUY_BTN if direction == "buy" else SEL_SELL_BTN
+    """Click the buy/sell button, handle confirmation dialog, wait for fill.
+
+    `direction` is normalised (case/whitespace insensitive) because callers
+    pass both `signal.direction.upper()` ("BUY"/"SELL") and lowercase
+    literals. Anything that is not buy/sell raises instead of silently
+    falling through to the sell button.
+    """
+    dir_norm = (direction or "").strip().lower()
+    if dir_norm not in ("buy", "sell"):
+        raise ValueError(f"submit_order: unknown direction {direction!r}")
+
+    selector = SEL_BUY_BTN if dir_norm == "buy" else SEL_SELL_BTN
+    print(f"  [direction] {direction!r} -> {dir_norm} button "
+          f"({'advanced-order-buy-button' if dir_norm == 'buy' else 'advanced-order-sell-button'})")
 
     if not wait_for_button_enabled(page, selector, timeout):
         print("  WARNING: Submit button still disabled after waiting")
