@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-24T12:15:57.952350+00:00",
+  "at": "2026-09-25T13:10:51.255780+00:00",
   "labels": {
-    "sl": 4292.44,
-    "tp": 4259.47
+    "sl": 42716.0,
+    "tp": 4299.95
   },
   "entry": {
-    "direction": "sell",
-    "entry_price": 4284.2
+    "direction": "buy",
+    "entry_price": 4278.69
   },
   "positions": [],
   "target": null,
