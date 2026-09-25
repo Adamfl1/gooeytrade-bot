@@ -1,14 +1,14 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 8
-  Pending SL/TP: 6 trade(s)
+  Trades so far: 9
+  Pending SL/TP: 7 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4291.26 :\n\nSL -\n\n1? -\n\nStatus FRESH i\nB\n4\n'
-  [OCR] Lines: ['BUY 4291.26 :', 'SL -', '1? -', 'Status FRESH i', 'B', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4291.26, 'status': 'fresh'}
+  [OCR] Raw text: 'BUY 4291.26\nSL 4278.51\nr TP 4329.51\n'
+  [OCR] Lines: ['BUY 4291.26', 'SL 4278.51', 'r TP 4329.51']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4291.26, 'sl': 4278.51}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -17,33 +17,15 @@
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] No open positions found — nothing to scan
+  [Phase B] Scanning 1 open position(s) for unset TP/SL...
+  [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
+  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4291.26 (SL/TP after candle close)
-  [Phase A] Signal status: FRESH (<120s)
-  [Phase A] Current price: 4293.17
-  [Phase A] Signal first seen — 120s timer started
+  [Phase A] Current price: 4293.28
+  [Phase A] Signal too old (280s > 120s) — skipping
 
-  SIGNAL (TradingView)
-  Direction:  BUY
-  Entry:      4291.26
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING BUY MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4293.57
-  Submitting BUY MARKET order...
-  [direction] 'BUY' -> buy button (advanced-order-buy-button)
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4293.57
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
