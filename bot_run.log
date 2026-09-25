@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4291.26\nSL 4278.51\nTP 4329.51\n77\n'
-  [OCR] Lines: ['BUY 4291.26', 'SL 4278.51', 'TP 4329.51', '77']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4291.26, 'sl': 4278.51, 'tp': 4329.51}
+  [OCR] Raw text: 'BUY 4291.26\nSL 4278.51\nTP 4329.51\n| OLD\n'
+  [OCR] Lines: ['BUY 4291.26', 'SL 4278.51', 'TP 4329.51', '| OLD']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4291.26, 'sl': 4278.51, 'tp': 4329.51, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -22,10 +22,10 @@
   [Phase B] BUY @ 4292.40: matching SL/TP label found! SL=4278.51 TP=4329.51 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4278.51
-  [Phase B] SL field initially shows '4292.20'
+  [Phase B] SL field initially shows '4290.03'
   [Phase B] SL field shows '4278.51' (wanted 4278.51)
   [Phase B] Setting TP = 4329.51
-  [Phase B] TP field initially shows '4292.58'
+  [Phase B] TP field initially shows '4290.50'
   [Phase B] TP field shows '4329.51' (wanted 4329.51)
   [Phase B] SL(retry) field initially shows '4278.52'
   [Phase B] SL(retry) field shows '4278.51' (wanted 4278.51)
@@ -33,8 +33,7 @@
   [Phase B] BUY @ 4292.40: failed to apply SL/TP (save button stayed disabled after typing (SL=4278.51 TP=4329.51)) — retrying next run
 
   [Phase A] Entry signal: BUY @ 4291.26 (SL/TP after candle close)
-  [Phase A] Current price: 4291.76
-  [Phase A] Signal too old (4201s > 120s) — skipping
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
