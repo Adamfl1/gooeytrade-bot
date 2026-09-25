@@ -11,17 +11,13 @@
   [OCR] Parsed: {'direction': 'buy', 'entry_price': 4278.69, 'sl': 42716.0, 'tp': 4299.95, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,267.115∅∅
+       - Supertrend1034,268.332∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] Scanning 2 open position(s) for unset TP/SL...
-  [Phase B] SELL @ 4281.75: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4281.75: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
-  [Phase B] SELL @ 4268.24: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4268.24: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
+  [Phase B] No open positions found — nothing to scan
 
   [Phase A] Entry signal: BUY @ 4278.69 (SL/TP after candle close)
   [Phase A] Signal status: OLD (>120s) — skipping
