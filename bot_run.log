@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4265.12\nSL 4275.02\nTP 4235.43\n\nStatus OLD\n'
-  [OCR] Lines: ['SELL 4265.12', 'SL 4275.02', 'TP 4235.43', 'Status OLD']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.12, 'sl': 4275.02, 'tp': 4235.43, 'status': 'old'}
+  [OCR] Raw text: 'BUY 4278.69\nSL -\n1? -\n\nStatus FRESH\n'
+  [OCR] Lines: ['BUY 4278.69', 'SL -', '1? -', 'Status FRESH']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4278.69, 'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend103∅4,274.993∅
+       - Supertrend1034,268.726∅∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -19,23 +19,32 @@
 
   [Phase B] Scanning 1 open position(s) for unset TP/SL...
   [Phase B] SELL @ 4268.24: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4268.24: matching SL/TP label found! SL=4275.02 TP=4235.43 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4275.02
-  [Phase B] SL field initially shows '4275.41'
-  [Phase B] SL field shows '4275.02' (wanted 4275.02)
-  [Phase B] Setting TP = 4235.43
-  [Phase B] TP field initially shows '4275.05'
-  [Phase B] TP field shows '4235.43' (wanted 4235.43)
-  [Phase B] SL(retry) field initially shows '4275.62'
-  [Phase B] SL(retry) field shows '4275.02' (wanted 4275.02)
-  [Phase B] save button stayed disabled after typing (SL=4275.02 TP=4235.43)
-  [Phase B] SELL @ 4268.24: failed to apply SL/TP (save button stayed disabled after typing (SL=4275.02 TP=4235.43)) — retrying next run
+  [Phase B] SELL @ 4268.24: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
-  [Phase A] Entry signal: SELL @ 4265.12 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase A] Entry signal: BUY @ 4278.69 (SL/TP after candle close)
+  [Phase A] Signal status: FRESH (<120s)
+  [Phase A] Current price: 4282.65
+  [Phase A] Signal first seen — 120s timer started
 
-  No actionable signals from TradingView this run.
+  SIGNAL (TradingView)
+  Direction:  BUY
+  Entry:      4278.69
+  SL/TP:      (will be applied on next candle)
+
+
+  === EXECUTING BUY MARKET ===
+  SL/TP:        (will be added on next candle)
+  Volume:       2.5
+  Dry Run:      False
+
+  Opening advanced order panel...
+  Setting volume to 2.5...
+  Live price at submission: 4282.70
+  Submitting BUY MARKET order...
+  Order confirmed via popup
+  Market order submitted successfully.
+
+  Trade opened. Live price: 4282.70
 
   Waiting 5 seconds before closing...
 
