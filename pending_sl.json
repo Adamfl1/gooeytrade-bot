@@ -61,5 +61,13 @@
     "entry_candle_start": "2026-09-25T01:00:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-25T01:01:22.073115+00:00"
+  },
+  {
+    "direction": "buy",
+    "entry_price": 4293.57,
+    "volume": 2.5,
+    "entry_candle_start": "2026-09-25T16:00:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-09-25T16:01:42.119727+00:00"
   }
 ]
