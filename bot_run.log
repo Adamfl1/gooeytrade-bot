@@ -6,12 +6,12 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4274.7\nSL 4260.45\nTP 4317.42\n\nStatus OLD\n'
-  [OCR] Lines: ['BUY 4274.7', 'SL 4260.45', 'TP 4317.42', 'Status OLD']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4274.7, 'sl': 4260.45, 'tp': 4317.42, 'status': 'old'}
+  [OCR] Raw text: 'SELL 4265.12\nSL -\n1? -\n\nStatus FRESH\n'
+  [OCR] Lines: ['SELL 4265.12', 'SL -', '1? -', 'Status FRESH']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4265.12, 'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
-       - Supertrend1034,266.358∅∅
+       - Supertrend103∅4,274.259∅
        - EMA200close
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
@@ -19,10 +19,30 @@
 
   [Phase B] No open positions found — nothing to scan
 
-  [Phase A] Entry signal: BUY @ 4274.70 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase A] Entry signal: SELL @ 4265.12 (SL/TP after candle close)
+  [Phase A] Signal status: FRESH (<120s)
+  [Phase A] Current price: 4268.38
+  [Phase A] Signal first seen — 120s timer started
 
-  No actionable signals from TradingView this run.
+  SIGNAL (TradingView)
+  Direction:  SELL
+  Entry:      4265.12
+  SL/TP:      (will be applied on next candle)
+
+
+  === EXECUTING SELL MARKET ===
+  SL/TP:        (will be added on next candle)
+  Volume:       2.5
+  Dry Run:      False
+
+  Opening advanced order panel...
+  Setting volume to 2.5...
+  Live price at submission: 4268.22
+  Submitting SELL MARKET order...
+  Order confirmed via popup
+  Market order submitted successfully.
+
+  Trade opened. Live price: 4268.22
 
   Waiting 5 seconds before closing...
 
