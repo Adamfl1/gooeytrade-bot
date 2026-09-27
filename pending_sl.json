@@ -45,8 +45,8 @@
     "entry_candle_start": "2026-09-24T16:25:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T16:26:19.377639+00:00",
-    "last_attempt_at": "2026-09-27T22:01:28.532914+00:00",
-    "last_error": "save button stayed disabled after typing (SL=4278.51 TP=4329.51)"
+    "last_attempt_at": "2026-09-27T22:06:17.576353+00:00",
+    "last_error": "no match yet: SL/TP label pair not on chart yet (candle still open or not formed)"
   },
   {
     "direction": "sell",
@@ -71,5 +71,13 @@
     "entry_candle_start": "2026-09-25T16:00:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-25T16:01:42.119727+00:00"
+  },
+  {
+    "direction": "sell",
+    "entry_price": 4274.35,
+    "volume": 2.5,
+    "entry_candle_start": "2026-09-27T22:05:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-09-27T22:06:24.807706+00:00"
   }
 ]
