@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4272.63\nSL 4280.28\nTP 4249.67\n\nStatus OLD\n'
-  [OCR] Lines: ['SELL 4272.63', 'SL 4280.28', 'TP 4249.67', 'Status OLD']
+  [OCR] Raw text: 'SELL 4272.63\nSL 4280.28\nTP 4249.67\nStatus OLD\n4\n'
+  [OCR] Lines: ['SELL 4272.63', 'SL 4280.28', 'TP 4249.67', 'Status OLD', '4']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4272.63, 'sl': 4280.28, 'tp': 4249.67, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4274.57: matching SL/TP label found! SL=4280.28 TP=4249.67 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4280.28
-  [Phase B] SL field initially shows '4150.59'
+  [Phase B] SL field initially shows '4145.00'
   [Phase B] SL field shows '4280.28' (wanted 4280.28)
   [Phase B] Setting TP = 4249.67
-  [Phase B] TP field initially shows '4150.01'
+  [Phase B] TP field initially shows '4144.37'
   [Phase B] TP field shows '4249.67' (wanted 4249.67)
   [Phase B] SL(retry) field initially shows '4280.29'
   [Phase B] SL(retry) field shows '4280.28' (wanted 4280.28)
