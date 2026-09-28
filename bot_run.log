@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4272.63 \\4\nSL 4280.28 4\nTP 424967 4\nStatus OLD\n\nB\n'
-  [OCR] Lines: ['SELL 4272.63 \\4', 'SL 4280.28 4', 'TP 424967 4', 'Status OLD', 'B']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4272.63, 'sl': 4280.28, 'status': 'old'}
+  [OCR] Raw text: 'seu anes &\n4\nSL 4280.28\nTe 42ag.e7 4\nStaus olD\n4\na\nss\n'
+  [OCR] Lines: ['seu anes &', '4', 'SL 4280.28', 'Te 42ag.e7 4', 'Staus olD', '4', 'a', 'ss']
+  [OCR] Parsed: {'sl': 4280.28, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -22,9 +22,7 @@
   [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
-
-  [Phase A] Entry signal: SELL @ 4272.63 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase A] No entry signal on chart
 
   No actionable signals from TradingView this run.
 
