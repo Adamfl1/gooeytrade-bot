@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4156.83 TP=4121.23 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4156.83
-  [Phase B] SL field initially shows '4123.74'
+  [Phase B] SL field initially shows '4122.89'
   [Phase B] SL field shows '4156.83' (wanted 4156.83)
   [Phase B] Setting TP = 4121.23
-  [Phase B] TP field initially shows '4122.78'
+  [Phase B] TP field initially shows '4122.43'
   [Phase B] TP field shows '4121.23' (wanted 4121.23)
   [Phase B] SL(retry) field initially shows '4156.84'
   [Phase B] SL(retry) field shows '4156.83' (wanted 4156.83)
@@ -37,8 +37,8 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart direction (sell) != position direction (buy) (expected/normal)
 
   [Phase A] Entry signal: SELL @ 4147.93 (SL/TP after candle close)
-  [Phase A] Current price: 4124.03
-  [Phase A] Signal too old (price 0.58% away from current) — skipping
+  [Phase A] Current price: 4122.23
+  [Phase A] Signal too old (price 0.62% away from current) — skipping
 
   No actionable signals from TradingView this run.
 
