@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4274.57: matching SL/TP label found! SL=4280.28 TP=4249.67 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4280.28
-  [Phase B] SL field initially shows '4198.05'
+  [Phase B] SL field initially shows '4199.55'
   [Phase B] SL field shows '4280.28' (wanted 4280.28)
   [Phase B] Setting TP = 4249.67
-  [Phase B] TP field initially shows '4197.52'
+  [Phase B] TP field initially shows '4198.86'
   [Phase B] TP field shows '4249.67' (wanted 4249.67)
   [Phase B] SL(retry) field initially shows '4280.29'
   [Phase B] SL(retry) field shows '4280.28' (wanted 4280.28)
