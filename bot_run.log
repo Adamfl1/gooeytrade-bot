@@ -1,14 +1,14 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 13
-  Pending SL/TP: 11 trade(s)
+  Trades so far: 14
+  Pending SL/TP: 12 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4165.14 4\n\nSL . 4\n\n1? - ‘\n\nStatus FRESH\n\nmM E\n+\n'
-  [OCR] Lines: ['BUY 4165.14 4', 'SL . 4', '1? - ‘', 'Status FRESH', 'mM E', '+']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4165.14, 'status': 'fresh'}
+  [OCR] Raw text: 'BUY 4165.14\n\nSL 4156.14\nTP 419212 4\n| ,\n4\n'
+  [OCR] Lines: ['BUY 4165.14', 'SL 4156.14', 'TP 419212 4', '| ,', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4165.14, 'sl': 4156.14}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -17,7 +17,9 @@
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] Scanning 5 open position(s) for unset TP/SL...
+  [Phase B] Scanning 6 open position(s) for unset TP/SL...
+  [Phase B] BUY @ 4166.51: TP/SL unset (SL='-' TP='-') — checking chart labels...
+  [Phase B] BUY @ 4166.51: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4126.01: TP/SL unset (SL='-' TP='-') — checking chart labels...
   [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
@@ -30,30 +32,10 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4165.14 (SL/TP after candle close)
-  [Phase A] Signal status: FRESH (<120s)
-  [Phase A] Current price: 4165.59
-  [Phase A] Signal first seen — 120s timer started
+  [Phase A] Current price: 4166.46
+  [Phase A] Signal too old (301s > 120s) — skipping
 
-  SIGNAL (TradingView)
-  Direction:  BUY
-  Entry:      4165.14
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING BUY MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4165.83
-  Submitting BUY MARKET order...
-  [direction] 'BUY' -> buy button (advanced-order-buy-button)
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4165.83
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
