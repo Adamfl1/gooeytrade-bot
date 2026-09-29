@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4163.14\nSL 4148.55 4\n\nTP 4206.91\nstaus oD\n4\n'
-  [OCR] Lines: ['BUY 4163.14', 'SL 4148.55 4', 'TP 4206.91', 'staus oD', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4163.14, 'sl': 4148.55, 'tp': 4206.91}
+  [OCR] Raw text: 'BUY 4163.14\nSL 414855 4\n\nTP 4206.91\nstaus oD\n4\n'
+  [OCR] Lines: ['BUY 4163.14', 'SL 414855 4', 'TP 4206.91', 'staus oD', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4163.14, 'tp': 4206.91}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,45 +19,23 @@
 
   [Phase B] Scanning 7 open position(s) for unset TP/SL...
   [Phase B] BUY @ 4161.56: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4161.56: matching SL/TP label found! SL=4148.55 TP=4206.91 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4148.55
-  [Phase B] SL field initially shows '4173.73'
-  [Phase B] SL field shows '4148.55' (wanted 4148.55)
-  [Phase B] Setting TP = 4206.91
-  [Phase B] TP field initially shows '4174.17'
-  [Phase B] TP field shows '4206.91' (wanted 4206.91)
-  [Phase B] SL(retry) field initially shows '4148.56'
-  [Phase B] SL(retry) field shows '4148.55' (wanted 4148.55)
-  [Phase B] save button stayed disabled after typing (SL=4148.55 TP=4206.91)
-  [Phase B] BUY @ 4161.56: failed to apply SL/TP (save button stayed disabled after typing (SL=4148.55 TP=4206.91)) — retrying next run
+  [Phase B] BUY @ 4161.56: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] BUY @ 4166.51: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4166.51: matching SL/TP label found! SL=4148.55 TP=4206.91 — applying...
-  [Phase B] Opening SL/TP edit dialog...
-  [Phase B] Setting SL = 4148.55
-  [Phase B] SL field initially shows '4174.30'
-  [Phase B] SL field shows '4148.55' (wanted 4148.55)
-  [Phase B] Setting TP = 4206.91
-  [Phase B] TP field initially shows '4174.58'
-  [Phase B] TP field shows '4206.91' (wanted 4206.91)
-  [Phase B] SL(retry) field initially shows '4148.56'
-  [Phase B] SL(retry) field shows '4148.55' (wanted 4148.55)
-  [Phase B] save button stayed disabled after typing (SL=4148.55 TP=4206.91)
-  [Phase B] BUY @ 4166.51: failed to apply SL/TP (save button stayed disabled after typing (SL=4148.55 TP=4206.91)) — retrying next run
+  [Phase B] BUY @ 4166.51: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4126.01: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
+  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
+  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4146.05: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
+  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4274.57: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: chart direction (buy) != position direction (sell) (expected/normal)
+  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart entry (4163.14) differs from position entry (4292.40) by 3.01% (expected/normal)
+  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4163.14 (SL/TP after candle close)
-  [Phase A] Current price: 4175.07
-  [Phase A] Signal too old (8132s > 120s) — skipping
+  [Phase A] Current price: 4174.58
+  [Phase A] Signal too old (8399s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
