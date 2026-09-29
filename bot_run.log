@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4126.01: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4143.81'
+  [Phase B] SL field initially shows '4142.36'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4143.46'
+  [Phase B] TP field initially shows '4142.08'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)
@@ -35,10 +35,10 @@
   [Phase B] SELL @ 4118.94: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4143.76'
+  [Phase B] SL field initially shows '4142.06'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4143.43'
+  [Phase B] TP field initially shows '4141.77'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)
@@ -48,10 +48,10 @@
   [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4143.34'
+  [Phase B] SL field initially shows '4142.44'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4142.92'
+  [Phase B] TP field initially shows '4142.02'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)

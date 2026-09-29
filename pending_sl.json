@@ -19,7 +19,7 @@
     "entry_candle_start": "2026-09-24T01:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T01:51:27.151655+00:00",
-    "last_attempt_at": "2026-09-29T09:06:22.332791+00:00",
+    "last_attempt_at": "2026-09-29T09:11:20.972462+00:00",
     "last_error": "no match yet: chart entry (4126.55) differs from position entry (4274.57) by 3.46%"
   },
   {
@@ -45,7 +45,7 @@
     "entry_candle_start": "2026-09-24T16:25:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T16:26:19.377639+00:00",
-    "last_attempt_at": "2026-09-29T09:06:22.332791+00:00",
+    "last_attempt_at": "2026-09-29T09:11:20.972462+00:00",
     "last_error": "no match yet: chart direction (sell) != position direction (buy)"
   },
   {
