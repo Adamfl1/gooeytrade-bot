@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4126.55\nSL 4132.16 4\nTP 4109.69,\nAces cu\ni 3\n'
-  [OCR] Lines: ['SELL 4126.55', 'SL 4132.16 4', 'TP 4109.69,', 'Aces cu', 'i 3']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'sl': 4132.16, 'tp': 4109.69}
+  [OCR] Raw text: 'SELL 4126.55\n\nSL 4132.16 4\n\nTP 4109.69,\n\n1 Status OLD,\nt i\n'
+  [OCR] Lines: ['SELL 4126.55', 'SL 4132.16 4', 'TP 4109.69,', '1 Status OLD,', 't i']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'sl': 4132.16, 'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -22,12 +22,12 @@
   [Phase B] SELL @ 4126.01: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4149.86'
+  [Phase B] SL field initially shows '4148.97'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4149.54'
+  [Phase B] TP field initially shows '4148.53'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4149.95'
+  [Phase B] SL(retry) field initially shows '4149.25'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4126.01: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
@@ -35,12 +35,12 @@
   [Phase B] SELL @ 4118.94: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4149.92'
+  [Phase B] SL field initially shows '4149.16'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4149.55'
+  [Phase B] TP field initially shows '4148.72'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4150.02'
+  [Phase B] SL(retry) field initially shows '4149.14'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4118.94: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
@@ -48,12 +48,12 @@
   [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4149.89'
+  [Phase B] SL field initially shows '4149.04'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4149.59'
+  [Phase B] TP field initially shows '4148.67'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4150.61'
+  [Phase B] SL(retry) field initially shows '4149.13'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4146.05: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
@@ -63,8 +63,7 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart direction (sell) != position direction (buy) (expected/normal)
 
   [Phase A] Entry signal: SELL @ 4126.55 (SL/TP after candle close)
-  [Phase A] Current price: 4149.96
-  [Phase A] Signal too old (price 0.56% away from current) — skipping
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
