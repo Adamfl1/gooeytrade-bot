@@ -19,8 +19,8 @@
     "entry_candle_start": "2026-09-24T01:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T01:51:27.151655+00:00",
-    "last_attempt_at": "2026-09-29T13:51:19.751247+00:00",
-    "last_error": "no match yet: SL/TP labels present but no matching chart direction found"
+    "last_attempt_at": "2026-09-29T13:56:37.871089+00:00",
+    "last_error": "no match yet: chart entry (4126.55) differs from position entry (4274.57) by 3.46%"
   },
   {
     "direction": "sell",
@@ -45,8 +45,8 @@
     "entry_candle_start": "2026-09-24T16:25:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T16:26:19.377639+00:00",
-    "last_attempt_at": "2026-09-29T13:51:19.751247+00:00",
-    "last_error": "no match yet: SL/TP labels present but no matching chart direction found"
+    "last_attempt_at": "2026-09-29T13:56:37.871089+00:00",
+    "last_error": "no match yet: chart direction (sell) != position direction (buy)"
   },
   {
     "direction": "sell",
