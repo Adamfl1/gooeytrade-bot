@@ -22,10 +22,10 @@
   [Phase B] BUY @ 4161.56: matching SL/TP label found! SL=4148.55 TP=4206.91 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4148.55
-  [Phase B] SL field initially shows '4166.77'
+  [Phase B] SL field initially shows '4173.34'
   [Phase B] SL field shows '4148.55' (wanted 4148.55)
   [Phase B] Setting TP = 4206.91
-  [Phase B] TP field initially shows '4167.37'
+  [Phase B] TP field initially shows '4174.31'
   [Phase B] TP field shows '4206.91' (wanted 4206.91)
   [Phase B] SL(retry) field initially shows '4148.56'
   [Phase B] SL(retry) field shows '4148.55' (wanted 4148.55)
@@ -35,10 +35,10 @@
   [Phase B] BUY @ 4166.51: matching SL/TP label found! SL=4148.55 TP=4206.91 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4148.55
-  [Phase B] SL field initially shows '4168.34'
+  [Phase B] SL field initially shows '4172.45'
   [Phase B] SL field shows '4148.55' (wanted 4148.55)
   [Phase B] Setting TP = 4206.91
-  [Phase B] TP field initially shows '4168.75'
+  [Phase B] TP field initially shows '4172.82'
   [Phase B] TP field shows '4206.91' (wanted 4206.91)
   [Phase B] SL(retry) field initially shows '4148.56'
   [Phase B] SL(retry) field shows '4148.55' (wanted 4148.55)
@@ -56,8 +56,8 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart entry (4163.14) differs from position entry (4292.40) by 3.01% (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4163.14 (SL/TP after candle close)
-  [Phase A] Current price: 4168.42
-  [Phase A] Signal too old (1848s > 120s) — skipping
+  [Phase A] Current price: 4173.62
+  [Phase A] Signal too old (2136s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
