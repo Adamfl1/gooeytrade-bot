@@ -1,14 +1,14 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 12
-  Pending SL/TP: 10 trade(s)
+  Trades so far: 13
+  Pending SL/TP: 11 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4126.55 4\nSL - PA\n1? -\n\n4\nStatus FRESH\n\na\n'
-  [OCR] Lines: ['SELL 4126.55 4', 'SL - PA', '1? -', '4', 'Status FRESH', 'a']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'status': 'fresh'}
+  [OCR] Raw text: 'SELL 412655 4\nSL 413216,\nTP 4109.69\n\nStatus OLD“\n\n4\n'
+  [OCR] Lines: ['SELL 412655 4', 'SL 413216,', 'TP 4109.69', 'Status OLD“', '4']
+  [OCR] Parsed: {'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -17,7 +17,9 @@
        - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
-  [Phase B] Scanning 4 open position(s) for unset TP/SL...
+  [Phase B] Scanning 5 open position(s) for unset TP/SL...
+  [Phase B] SELL @ 4126.01: TP/SL unset (SL='-' TP='-') — checking chart labels...
+  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
   [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] SELL @ 4146.05: TP/SL unset (SL='-' TP='-') — checking chart labels...
@@ -26,32 +28,9 @@
   [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase A] No entry signal on chart
 
-  [Phase A] Entry signal: SELL @ 4126.55 (SL/TP after candle close)
-  [Phase A] Signal status: FRESH (<120s)
-  [Phase A] Current price: 4126.41
-  [Phase A] Signal first seen — 120s timer started
-
-  SIGNAL (TradingView)
-  Direction:  SELL
-  Entry:      4126.55
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING SELL MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4126.10
-  Submitting SELL MARKET order...
-  [direction] 'SELL' -> sell button (advanced-order-sell-button)
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4126.10
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
