@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 412655 ,\n\nSL 4132.16\nTP 4109.69 4\n\nStatus OLD\nW\nk\n'
-  [OCR] Lines: ['SELL 412655 ,', 'SL 4132.16', 'TP 4109.69 4', 'Status OLD', 'W', 'k']
-  [OCR] Parsed: {'sl': 4132.16, 'tp': 4109.69, 'status': 'old'}
+  [OCR] Raw text: 'SELL 4126.55 4\nSL 4132.16\nTP 4109.69 4\n‘Status OLD\n1 4\niP I\n'
+  [OCR] Lines: ['SELL 4126.55 4', 'SL 4132.16', 'TP 4109.69 4', '‘Status OLD', '1 4', 'iP I']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'sl': 4132.16, 'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,16 +19,51 @@
 
   [Phase B] Scanning 5 open position(s) for unset TP/SL...
   [Phase B] SELL @ 4126.01: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
+  [Phase B] SELL @ 4126.01: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
+  [Phase B] Opening SL/TP edit dialog...
+  [Phase B] Setting SL = 4132.16
+  [Phase B] SL field initially shows '4158.17'
+  [Phase B] SL field shows '4132.16' (wanted 4132.16)
+  [Phase B] Setting TP = 4109.69
+  [Phase B] TP field initially shows '4157.90'
+  [Phase B] TP field shows '4109.69' (wanted 4109.69)
+  [Phase B] SL(retry) field initially shows '4158.37'
+  [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
+  [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
+  [Phase B] SELL @ 4126.01: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
+  [Phase B] SELL @ 4118.94: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
+  [Phase B] Opening SL/TP edit dialog...
+  [Phase B] Setting SL = 4132.16
+  [Phase B] SL field initially shows '4158.31'
+  [Phase B] SL field shows '4132.16' (wanted 4132.16)
+  [Phase B] Setting TP = 4109.69
+  [Phase B] TP field initially shows '4158.00'
+  [Phase B] TP field shows '4109.69' (wanted 4109.69)
+  [Phase B] SL(retry) field initially shows '4158.49'
+  [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
+  [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
+  [Phase B] SELL @ 4118.94: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
   [Phase B] SELL @ 4146.05: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
+  [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
+  [Phase B] Opening SL/TP edit dialog...
+  [Phase B] Setting SL = 4132.16
+  [Phase B] SL field initially shows '4158.31'
+  [Phase B] SL field shows '4132.16' (wanted 4132.16)
+  [Phase B] Setting TP = 4109.69
+  [Phase B] TP field initially shows '4158.04'
+  [Phase B] TP field shows '4109.69' (wanted 4109.69)
+  [Phase B] SL(retry) field initially shows '4158.49'
+  [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
+  [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
+  [Phase B] SELL @ 4146.05: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
   [Phase B] SELL @ 4274.57: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
+  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: chart entry (4126.55) differs from position entry (4274.57) by 3.46% (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
-  [Phase A] No entry signal on chart
+  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart direction (sell) != position direction (buy) (expected/normal)
+
+  [Phase A] Entry signal: SELL @ 4126.55 (SL/TP after candle close)
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
