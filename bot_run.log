@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4126.55 ‘\nSL 4132.16\nTP 4109.69 4\n‘Status OLD .\nif :\n|\n'
-  [OCR] Lines: ['SELL 4126.55 ‘', 'SL 4132.16', 'TP 4109.69 4', '‘Status OLD .', 'if :', '|']
+  [OCR] Raw text: 'SELL 4126.55 ‘\nSL 4132.16\nTP 4109.69 ‘\n‘Status OLD 4\n| E\n'
+  [OCR] Lines: ['SELL 4126.55 ‘', 'SL 4132.16', 'TP 4109.69 ‘', '‘Status OLD 4', '| E']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'sl': 4132.16, 'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
@@ -22,12 +22,12 @@
   [Phase B] SELL @ 4126.01: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4141.24'
+  [Phase B] SL field initially shows '4142.58'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4140.68'
+  [Phase B] TP field initially shows '4142.29'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4141.13'
+  [Phase B] SL(retry) field initially shows '4142.93'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4126.01: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
@@ -35,12 +35,12 @@
   [Phase B] SELL @ 4118.94: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4140.43'
+  [Phase B] SL field initially shows '4141.73'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4139.78'
+  [Phase B] TP field initially shows '4141.25'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4140.94'
+  [Phase B] SL(retry) field initially shows '4142.93'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4118.94: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
@@ -48,12 +48,12 @@
   [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4132.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4132.16
-  [Phase B] SL field initially shows '4140.86'
+  [Phase B] SL field initially shows '4142.39'
   [Phase B] SL field shows '4132.16' (wanted 4132.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4140.34'
+  [Phase B] TP field initially shows '4141.99'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
-  [Phase B] SL(retry) field initially shows '4140.71'
+  [Phase B] SL(retry) field initially shows '4142.53'
   [Phase B] SL(retry) field shows '4132.16' (wanted 4132.16)
   [Phase B] save button stayed disabled after typing (SL=4132.16 TP=4109.69)
   [Phase B] SELL @ 4146.05: failed to apply SL/TP (save button stayed disabled after typing (SL=4132.16 TP=4109.69)) — retrying next run
