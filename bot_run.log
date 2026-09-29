@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 411785\nst 412503“\n1? 4093“\nStatus olD 4\n4\n4\n'
-  [OCR] Lines: ['SELL 411785', 'st 412503“', '1? 4093“', 'Status olD 4', '4', '4']
-  [OCR] Parsed: {'status': 'old'}
+  [OCR] Raw text: 'Seu au7es\nSL 4125.03 4\nTP 40963 4\n\nStatus OLD,\n\n4\n'
+  [OCR] Lines: ['Seu au7es', 'SL 4125.03 4', 'TP 40963 4', 'Status OLD,', '4']
+  [OCR] Parsed: {'sl': 4125.03, 'tp': 40963.0, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,13 +19,13 @@
 
   [Phase B] Scanning 4 open position(s) for unset TP/SL...
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] SELL @ 4146.05: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] SELL @ 4274.57: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase A] No entry signal on chart
 
   No actionable signals from TradingView this run.
