@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4126.55\nsl aseis\nTp 410969 4\n‘Status... OLD. E\ni\n| :\n'
-  [OCR] Lines: ['SELL 4126.55', 'sl aseis', 'Tp 410969 4', '‘Status... OLD. E', 'i', '| :']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'status': 'old'}
+  [OCR] Raw text: "SELL 412655\nsL 4132.16“\nTP 4109.69 4\npp Sistus OLD\n' L\n"
+  [OCR] Lines: ['SELL 412655', 'sL 4132.16“', 'TP 4109.69 4', 'pp Sistus OLD', "' L"]
+  [OCR] Parsed: {'sl': 4132.16, 'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,18 +19,16 @@
 
   [Phase B] Scanning 5 open position(s) for unset TP/SL...
   [Phase B] SELL @ 4126.01: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4126.01: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] SELL @ 4118.94: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4118.94: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] SELL @ 4146.05: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4146.05: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] SELL @ 4274.57: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
+  [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
-  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
-
-  [Phase A] Entry signal: SELL @ 4126.55 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP labels present but no matching chart direction found (expected/normal)
+  [Phase A] No entry signal on chart
 
   No actionable signals from TradingView this run.
 
