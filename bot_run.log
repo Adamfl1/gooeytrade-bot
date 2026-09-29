@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4126.55 4\nSL 4182.16,\nTP 4109.69\n4\nStatus OLD\n4\n. 4\n'
-  [OCR] Lines: ['SELL 4126.55 4', 'SL 4182.16,', 'TP 4109.69', '4', 'Status OLD', '4', '. 4']
+  [OCR] Raw text: 'SELL 4126.55 4\nSL 4182.16,\nTP 4109.69\n4\nStatus OLD\n4\na\n'
+  [OCR] Lines: ['SELL 4126.55 4', 'SL 4182.16,', 'TP 4109.69', '4', 'Status OLD', '4', 'a']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4126.55, 'sl': 4182.16, 'tp': 4109.69, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
@@ -22,10 +22,10 @@
   [Phase B] SELL @ 4126.01: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4140.97'
+  [Phase B] SL field initially shows '4143.78'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4140.41'
+  [Phase B] TP field initially shows '4143.23'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)
@@ -35,10 +35,10 @@
   [Phase B] SELL @ 4118.94: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4142.02'
+  [Phase B] SL field initially shows '4143.24'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4141.62'
+  [Phase B] TP field initially shows '4142.95'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)
@@ -48,10 +48,10 @@
   [Phase B] SELL @ 4146.05: matching SL/TP label found! SL=4182.16 TP=4109.69 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4182.16
-  [Phase B] SL field initially shows '4142.02'
+  [Phase B] SL field initially shows '4142.79'
   [Phase B] SL field shows '4182.16' (wanted 4182.16)
   [Phase B] Setting TP = 4109.69
-  [Phase B] TP field initially shows '4141.67'
+  [Phase B] TP field initially shows '4142.45'
   [Phase B] TP field shows '4109.69' (wanted 4109.69)
   [Phase B] SL(retry) field initially shows '4182.17'
   [Phase B] SL(retry) field shows '4182.16' (wanted 4182.16)
