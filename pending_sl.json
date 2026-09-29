@@ -19,7 +19,7 @@
     "entry_candle_start": "2026-09-24T01:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T01:51:27.151655+00:00",
-    "last_attempt_at": "2026-09-29T03:21:16.189300+00:00",
+    "last_attempt_at": "2026-09-29T03:26:12.158340+00:00",
     "last_error": "no match yet: SL/TP labels present but no matching chart direction found"
   },
   {
@@ -45,7 +45,7 @@
     "entry_candle_start": "2026-09-24T16:25:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T16:26:19.377639+00:00",
-    "last_attempt_at": "2026-09-29T03:21:16.189300+00:00",
+    "last_attempt_at": "2026-09-29T03:26:12.158340+00:00",
     "last_error": "no match yet: SL/TP labels present but no matching chart direction found"
   },
   {
