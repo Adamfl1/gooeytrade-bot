@@ -35,7 +35,7 @@
 
   [Phase A] Entry signal: BUY @ 4163.14 (SL/TP after candle close)
   [Phase A] Current price: 4182.75
-  [Phase A] Signal too old (10498s > 120s) — skipping
+  [Phase A] Signal too old (10800s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
