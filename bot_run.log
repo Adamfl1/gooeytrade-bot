@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 418189,\nSL 4173.73\nrp 206834\nStatus OLD“\n:\n4\n'
-  [OCR] Lines: ['BUY 418189,', 'SL 4173.73', 'rp 206834', 'Status OLD“', ':', '4']
-  [OCR] Parsed: {'sl': 4173.73, 'status': 'old'}
+  [OCR] Raw text: 'BUY 4181.89\nsi ais73\nTP 4206.34 4\n| OLD 4\n4\n'
+  [OCR] Lines: ['BUY 4181.89', 'si ais73', 'TP 4206.34 4', '| OLD 4', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4181.89, 'tp': 4206.34, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -34,7 +34,9 @@
   [Phase B] SELL @ 4274.57: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
   [Phase B] BUY @ 4292.40: TP/SL unset (SL='-' TP='-') — checking chart labels...
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: SL/TP label pair not on chart yet (candle still open or not formed) (expected/normal)
-  [Phase A] No entry signal on chart
+
+  [Phase A] Entry signal: BUY @ 4181.89 (SL/TP after candle close)
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
