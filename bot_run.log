@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4189.88 4\nSL 4180.51\nTP 4217.96 G\nstatus olp  “\n4\n| ,\n'
-  [OCR] Lines: ['BUY 4189.88 4', 'SL 4180.51', 'TP 4217.96 G', 'status olp  “', '4', '| ,']
+  [OCR] Raw text: 'BUY 4189.88 4\nSL 4180.51\nTP 4217.96 G\nstatus olp  “\n4\n'
+  [OCR] Lines: ['BUY 4189.88 4', 'SL 4180.51', 'TP 4217.96 G', 'status olp  “', '4']
   [OCR] Parsed: {'direction': 'buy', 'entry_price': 4189.88, 'sl': 4180.51, 'tp': 4217.96}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
@@ -22,10 +22,10 @@
   [Phase B] BUY @ 4188.64: matching SL/TP label found! SL=4180.51 TP=4217.96 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4180.51
-  [Phase B] SL field initially shows '4210.20'
+  [Phase B] SL field initially shows '4204.84'
   [Phase B] SL field shows '4180.51' (wanted 4180.51)
   [Phase B] Setting TP = 4217.96
-  [Phase B] TP field initially shows '4210.75'
+  [Phase B] TP field initially shows '4205.34'
   [Phase B] TP field shows '4217.96' (wanted 4217.96)
   [Phase B] SL(retry) field initially shows '4180.52'
   [Phase B] SL(retry) field shows '4180.51' (wanted 4180.51)
@@ -35,10 +35,10 @@
   [Phase B] BUY @ 4184.24: matching SL/TP label found! SL=4180.51 TP=4217.96 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4180.51
-  [Phase B] SL field initially shows '4208.85'
+  [Phase B] SL field initially shows '4205.16'
   [Phase B] SL field shows '4180.51' (wanted 4180.51)
   [Phase B] Setting TP = 4217.96
-  [Phase B] TP field initially shows '4209.32'
+  [Phase B] TP field initially shows '4205.71'
   [Phase B] TP field shows '4217.96' (wanted 4217.96)
   [Phase B] SL(retry) field initially shows '4180.52'
   [Phase B] SL(retry) field shows '4180.51' (wanted 4180.51)
@@ -60,8 +60,8 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart entry (4189.88) differs from position entry (4292.40) by 2.39% (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4189.88 (SL/TP after candle close)
-  [Phase A] Current price: 4208.52
-  [Phase A] Signal too old (5146s > 120s) — skipping
+  [Phase A] Current price: 4204.48
+  [Phase A] Signal too old (5452s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
