@@ -22,12 +22,12 @@
   [Phase B] BUY @ 4188.64: matching SL/TP label found! SL=4180.51 TP=4217.96 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4180.51
-  [Phase B] SL field initially shows '4182.42'
+  [Phase B] SL field initially shows '4179.85'
   [Phase B] SL field shows '4180.51' (wanted 4180.51)
   [Phase B] Setting TP = 4217.96
-  [Phase B] TP field initially shows '4183.07'
+  [Phase B] TP field initially shows '4180.21'
   [Phase B] TP field shows '4217.96' (wanted 4217.96)
-  [Phase B] SL(retry) field initially shows '4180.52'
+  [Phase B] SL(retry) field initially shows '4179.34'
   [Phase B] SL(retry) field shows '4180.51' (wanted 4180.51)
   [Phase B] save button stayed disabled after typing (SL=4180.51 TP=4217.96)
   [Phase B] BUY @ 4188.64: failed to apply SL/TP (save button stayed disabled after typing (SL=4180.51 TP=4217.96)) — retrying next run
@@ -35,12 +35,12 @@
   [Phase B] BUY @ 4184.24: matching SL/TP label found! SL=4180.51 TP=4217.96 — applying...
   [Phase B] Opening SL/TP edit dialog...
   [Phase B] Setting SL = 4180.51
-  [Phase B] SL field initially shows '4180.43'
+  [Phase B] SL field initially shows '4180.92'
   [Phase B] SL field shows '4180.51' (wanted 4180.51)
   [Phase B] Setting TP = 4217.96
-  [Phase B] TP field initially shows '4180.87'
+  [Phase B] TP field initially shows '4181.55'
   [Phase B] TP field shows '4217.96' (wanted 4217.96)
-  [Phase B] SL(retry) field initially shows '4180.49'
+  [Phase B] SL(retry) field initially shows '4179.30'
   [Phase B] SL(retry) field shows '4180.51' (wanted 4180.51)
   [Phase B] save button stayed disabled after typing (SL=4180.51 TP=4217.96)
   [Phase B] BUY @ 4184.24: failed to apply SL/TP (save button stayed disabled after typing (SL=4180.51 TP=4217.96)) — retrying next run
@@ -60,8 +60,8 @@
   [Phase B] BUY @ 4292.40: no SL/TP label yet, skipping — no match yet: chart entry (4189.88) differs from position entry (4292.40) by 2.39% (expected/normal)
 
   [Phase A] Entry signal: BUY @ 4189.88 (SL/TP after candle close)
-  [Phase A] Current price: 4181.89
-  [Phase A] Signal too old (8744s > 120s) — skipping
+  [Phase A] Current price: 4180.21
+  [Phase A] Signal too old (9068s > 120s) — skipping
 
   No actionable signals from TradingView this run.
 
