@@ -19,7 +19,7 @@
     "entry_candle_start": "2026-09-24T01:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T01:51:27.151655+00:00",
-    "last_attempt_at": "2026-09-30T11:36:18.092661+00:00",
+    "last_attempt_at": "2026-09-30T11:41:18.960147+00:00",
     "last_error": "no match yet: SL/TP label pair not on chart yet (candle still open or not formed)"
   },
   {
@@ -45,7 +45,7 @@
     "entry_candle_start": "2026-09-24T16:25:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-24T16:26:19.377639+00:00",
-    "last_attempt_at": "2026-09-30T11:36:18.092661+00:00",
+    "last_attempt_at": "2026-09-30T11:41:18.960147+00:00",
     "last_error": "no match yet: SL/TP label pair not on chart yet (candle still open or not formed)"
   },
   {
@@ -127,5 +127,13 @@
     "entry_candle_start": "2026-09-30T02:50:00+00:00",
     "resolved": false,
     "opened_at": "2026-09-30T02:51:25.325520+00:00"
+  },
+  {
+    "direction": "buy",
+    "entry_price": 4188.4,
+    "volume": 2.5,
+    "entry_candle_start": "2026-09-30T11:40:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-09-30T11:41:26.322910+00:00"
   }
 ]
