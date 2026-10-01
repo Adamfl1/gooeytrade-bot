@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4150.88\nst ais\nTP 4138.16 4\nStatus OLD,\n4\n'
-  [OCR] Lines: ['SELL 4150.88', 'st ais', 'TP 4138.16 4', 'Status OLD,', '4']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4150.88, 'tp': 4138.16, 'status': 'old'}
+  [OCR] Raw text: 'SELL 4150.88\nSL 4155.11 4\nTP 4138.16 4\n‘Status OLD 4\nTI 4\n'
+  [OCR] Lines: ['SELL 4150.88', 'SL 4155.11 4', 'TP 4138.16 4', '‘Status OLD 4', 'TI 4']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4150.88, 'sl': 4155.11, 'tp': 4138.16, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
