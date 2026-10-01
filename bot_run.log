@@ -1,14 +1,14 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 17
-  Pending SL/TP: 15 trade(s)
+  Trades so far: 18
+  Pending SL/TP: 16 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4174.96\n\nsl atsea\n\nTP 4225.19 4\n4\nB\n4\n'
-  [OCR] Lines: ['BUY 4174.96', 'sl atsea', 'TP 4225.19 4', '4', 'B', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4174.96, 'tp': 4225.19}
+  [OCR] Raw text: 'BUY 4174.96\nsl atsea\n= TP 4225.19 4\n——Siatis—OLD—\nB\n4\n'
+  [OCR] Lines: ['BUY 4174.96', 'sl atsea', '= TP 4225.19 4', '——Siatis—OLD—', 'B', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4174.96, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -20,29 +20,9 @@
   [Phase B] No open positions found — nothing to scan
 
   [Phase A] Entry signal: BUY @ 4174.96 (SL/TP after candle close)
-  [Phase A] Current price: 4169.18
-  [Phase A] Signal first seen — 120s timer started
+  [Phase A] Signal status: OLD (>120s) — skipping
 
-  SIGNAL (TradingView)
-  Direction:  BUY
-  Entry:      4174.96
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING BUY MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4169.21
-  Submitting BUY MARKET order...
-  [direction] 'BUY' -> buy button (advanced-order-buy-button)
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4169.21
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
