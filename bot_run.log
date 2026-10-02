@@ -6,7 +6,7 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4174.96 4\n\nSL 4158.21\n\nTP 4225.19,\nStatus OLD,\n\n| 4\n'
+  [OCR] Raw text: 'BUY 4174.96 4\n\nSL 4158.21\n\nTP 4225.19,\n\nStatus OLD,\n\n| 4\n'
   [OCR] Lines: ['BUY 4174.96 4', 'SL 4158.21', 'TP 4225.19,', 'Status OLD,', '| 4']
   [OCR] Parsed: {'direction': 'buy', 'entry_price': 4174.96, 'sl': 4158.21, 'tp': 4225.19, 'status': 'old'}
   [TV] Labels found: 5
