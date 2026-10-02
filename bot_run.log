@@ -6,15 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'Buy 417496“\nSL 4158.21 4\nTP 4225.19 4\n\nStatus OLD,\na\n4\n'
-  [OCR] Lines: ['Buy 417496“', 'SL 4158.21 4', 'TP 4225.19 4', 'Status OLD,', 'a', '4']
-  [OCR] Parsed: {'sl': 4158.21, 'tp': 4225.19, 'status': 'old'}
-  [TV] Labels found: 5
-       - ATR14RMA1.5highlow
-       - Supertrend103
-       - EMA200close
-       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
-       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+  [scraper] Timeout waiting for chart to load
+  [TV] Labels found: 0
   Trade page loaded.
 
   [Phase B] No open positions found — nothing to scan
