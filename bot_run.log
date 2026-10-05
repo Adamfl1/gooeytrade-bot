@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: '4\n\nBUY 4164.29\nSL 4156.42,\n\nTP 4187.91\n__Status OLD _ 4\n4\n'
-  [OCR] Lines: ['4', 'BUY 4164.29', 'SL 4156.42,', 'TP 4187.91', '__Status OLD _ 4', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4164.29, 'sl': 4156.42, 'tp': 4187.91, 'status': 'old'}
+  [OCR] Raw text: '4\nSELL 4152.04\nSL - ;\n1? :\n___Status FRESH 4\n4\n'
+  [OCR] Lines: ['4', 'SELL 4152.04', 'SL - ;', '1? :', '___Status FRESH 4', '4']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4152.04, 'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,10 +19,31 @@
 
   [Phase B] No open positions found — nothing to scan
 
-  [Phase A] Entry signal: BUY @ 4164.29 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase A] Entry signal: SELL @ 4152.04 (SL/TP after candle close)
+  [Phase A] Signal status: FRESH (<120s)
+  [Phase A] Current price: 4153.42
+  [Phase A] Signal first seen — 120s timer started
 
-  No actionable signals from TradingView this run.
+  SIGNAL (TradingView)
+  Direction:  SELL
+  Entry:      4152.04
+  SL/TP:      (will be applied on next candle)
+
+
+  === EXECUTING SELL MARKET ===
+  SL/TP:        (will be added on next candle)
+  Volume:       2.5
+  Dry Run:      False
+
+  Opening advanced order panel...
+  Setting volume to 2.5...
+  Live price at submission: 4153.15
+  Submitting SELL MARKET order...
+  [direction] 'SELL' -> sell button (advanced-order-sell-button)
+  Order confirmed via popup
+  Market order submitted successfully.
+
+  Trade opened. Live price: 4153.15
 
   Waiting 5 seconds before closing...
 
