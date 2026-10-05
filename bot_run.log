@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: '4\n\nBUY 4164.29\nSL 4156.42,\n\nTP 4187.91\nyl\n4\n'
-  [OCR] Lines: ['4', 'BUY 4164.29', 'SL 4156.42,', 'TP 4187.91', 'yl', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4164.29, 'sl': 4156.42, 'tp': 4187.91}
+  [OCR] Raw text: '4\nBUY 4164.29\nSL 4156.42,\nTP 4187.91\nF Status OLD 4\n4\n'
+  [OCR] Lines: ['4', 'BUY 4164.29', 'SL 4156.42,', 'TP 4187.91', 'F Status OLD 4', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4164.29, 'sl': 4156.42, 'tp': 4187.91, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -20,8 +20,7 @@
   [Phase B] No open positions found — nothing to scan
 
   [Phase A] Entry signal: BUY @ 4164.29 (SL/TP after candle close)
-  [Phase A] Current price: 4162.43
-  [Phase A] Signal too old (297s > 120s) — skipping
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
