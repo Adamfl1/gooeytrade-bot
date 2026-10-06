@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'seu ais632\nSL 414467 4\nTP 4111.26\ni" status lo\nt 4\n'
-  [OCR] Lines: ['seu ais632', 'SL 414467 4', 'TP 4111.26', 'i" status lo', 't 4']
+  [OCR] Raw text: 'seu ais632\nSL 414467 4\nTP 4111.26\nit i Status Lo\ni\n'
+  [OCR] Lines: ['seu ais632', 'SL 414467 4', 'TP 4111.26', 'it i Status Lo', 'i']
   [OCR] Parsed: {'tp': 4111.26}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
