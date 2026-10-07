@@ -20,8 +20,8 @@
   [Phase B] No open positions found — nothing to scan
 
   [Phase A] Entry signal: SELL @ 4137.21 (SL/TP after candle close)
-  [Phase A] Current price: 4116.76
-  [Phase A] Signal too old (45593s > 120s) — skipping
+  [Phase A] Current price: 4116.34
+  [Phase A] Signal too old (price 0.51% away from current) — skipping
 
   No actionable signals from TradingView this run.
 
