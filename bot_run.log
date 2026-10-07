@@ -1,14 +1,14 @@
 ============================================================
   GooeyTrade Bot
   Mode: LIVE
-  Trades so far: 27
-  Pending SL/TP: 25 trade(s)
+  Trades so far: 28
+  Pending SL/TP: 26 trade(s)
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4137.21 4\nSL - 4\nTP - 4\n\nStatus FRESH ,\n\n4\n'
-  [OCR] Lines: ['SELL 4137.21 4', 'SL - 4', 'TP - 4', 'Status FRESH ,', '4']
-  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4137.21, 'status': 'fresh'}
+  [OCR] Raw text: 'SELL 4137.21 4\nSL 4142.72\n4\nTP 4120.66\nStatus OLD,\n4\n'
+  [OCR] Lines: ['SELL 4137.21 4', 'SL 4142.72', '4', 'TP 4120.66', 'Status OLD,', '4']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4137.21, 'sl': 4142.72, 'tp': 4120.66, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -20,30 +20,9 @@
   [Phase B] No open positions found — nothing to scan
 
   [Phase A] Entry signal: SELL @ 4137.21 (SL/TP after candle close)
-  [Phase A] Signal status: FRESH (<120s)
-  [Phase A] Current price: 4138.59
-  [Phase A] Signal first seen — 120s timer started
+  [Phase A] Signal status: OLD (>120s) — skipping
 
-  SIGNAL (TradingView)
-  Direction:  SELL
-  Entry:      4137.21
-  SL/TP:      (will be applied on next candle)
-
-
-  === EXECUTING SELL MARKET ===
-  SL/TP:        (will be added on next candle)
-  Volume:       2.5
-  Dry Run:      False
-
-  Opening advanced order panel...
-  Setting volume to 2.5...
-  Live price at submission: 4138.31
-  Submitting SELL MARKET order...
-  [direction] 'SELL' -> sell button (advanced-order-sell-button)
-  Order confirmed via popup
-  Market order submitted successfully.
-
-  Trade opened. Live price: 4138.31
+  No actionable signals from TradingView this run.
 
   Waiting 5 seconds before closing...
 
