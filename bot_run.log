@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4118.66\nst azror *\nTe 4093.44\nStatus OLD 4\n4\n'
-  [OCR] Lines: ['SELL 4118.66', 'st azror *', 'Te 4093.44', 'Status OLD 4', '4']
+  [OCR] Raw text: 'SELL 4118.66\nst azror *\nTe 4093.44\nStatus OLD 4\n4\n1 ge\n'
+  [OCR] Lines: ['SELL 4118.66', 'st azror *', 'Te 4093.44', 'Status OLD 4', '4', '1 ge']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4118.66, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
