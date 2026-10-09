@@ -6,12 +6,21 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [scraper] Timeout waiting for chart to load
-  [TV] Labels found: 0
+  [OCR] Raw text: 'SELL 4118.66 4\nSL 4127.07\nTe 4093.44 4\nStaus OLD,\n‘\n| ;\n'
+  [OCR] Lines: ['SELL 4118.66 4', 'SL 4127.07', 'Te 4093.44 4', 'Staus OLD,', '‘', '| ;']
+  [OCR] Parsed: {'direction': 'sell', 'entry_price': 4118.66, 'sl': 4127.07, 'status': 'old'}
+  [TV] Labels found: 5
+       - ATR14RMA1.5highlow
+       - Supertrend103
+       - EMA200close
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
+       - XAUUSD 5m - EMA200 Bias + Supertrend Flip Entry200103141.53200.5
   Trade page loaded.
 
   [Phase B] No open positions found — nothing to scan
-  [Phase A] No entry signal on chart
+
+  [Phase A] Entry signal: SELL @ 4118.66 (SL/TP after candle close)
+  [Phase A] Signal status: OLD (>120s) — skipping
 
   No actionable signals from TradingView this run.
 
