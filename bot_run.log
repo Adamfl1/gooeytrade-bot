@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4187.41,\n\nSL 4179.26\nTe ane? *\nStatus OLD 4\n4\n'
-  [OCR] Lines: ['BUY 4187.41,', 'SL 4179.26', 'Te ane? *', 'Status OLD 4', '4']
-  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4187.41, 'sl': 4179.26, 'status': 'old'}
+  [OCR] Raw text: 'BUY 4193.33,\nSL -\n4\nTP -\nStatus FRESH 4\n4\n'
+  [OCR] Lines: ['BUY 4193.33,', 'SL -', '4', 'TP -', 'Status FRESH 4', '4']
+  [OCR] Parsed: {'direction': 'buy', 'entry_price': 4193.33, 'status': 'fresh'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
@@ -19,10 +19,31 @@
 
   [Phase B] No open positions found — nothing to scan
 
-  [Phase A] Entry signal: BUY @ 4187.41 (SL/TP after candle close)
-  [Phase A] Signal status: OLD (>120s) — skipping
+  [Phase A] Entry signal: BUY @ 4193.33 (SL/TP after candle close)
+  [Phase A] Signal status: FRESH (<120s)
+  [Phase A] Current price: 4194.98
+  [Phase A] Signal first seen — 120s timer started
 
-  No actionable signals from TradingView this run.
+  SIGNAL (TradingView)
+  Direction:  BUY
+  Entry:      4193.33
+  SL/TP:      (will be applied on next candle)
+
+
+  === EXECUTING BUY MARKET ===
+  SL/TP:        (will be added on next candle)
+  Volume:       2.5
+  Dry Run:      False
+
+  Opening advanced order panel...
+  Setting volume to 2.5...
+  Live price at submission: 4195.03
+  Submitting BUY MARKET order...
+  [direction] 'BUY' -> buy button (advanced-order-buy-button)
+  Order confirmed via popup
+  Market order submitted successfully.
+
+  Trade opened. Live price: 4195.03
 
   Waiting 5 seconds before closing...
 
