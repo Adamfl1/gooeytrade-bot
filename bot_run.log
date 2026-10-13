@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SELL 4166.84 4\n\nSL 4170.76 4\n\nTP 4155.06,\ni OLD\n\n4\n\n4\n'
-  [OCR] Lines: ['SELL 4166.84 4', 'SL 4170.76 4', 'TP 4155.06,', 'i OLD', '4', '4']
+  [OCR] Raw text: 'SELL 4166.84 4\nSL 4170.76 4\nTP 4155.06,\nStatus OLD\n\n4\n'
+  [OCR] Lines: ['SELL 4166.84 4', 'SL 4170.76 4', 'TP 4155.06,', 'Status OLD', '4']
   [OCR] Parsed: {'direction': 'sell', 'entry_price': 4166.84, 'sl': 4170.76, 'tp': 4155.06, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
