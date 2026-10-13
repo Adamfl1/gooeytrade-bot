@@ -311,5 +311,13 @@
     "entry_candle_start": "2026-10-13T12:15:00+00:00",
     "resolved": false,
     "opened_at": "2026-10-13T12:16:31.821369+00:00"
+  },
+  {
+    "direction": "sell",
+    "entry_price": 4178.33,
+    "volume": 2.5,
+    "entry_candle_start": "2026-10-13T12:55:00+00:00",
+    "resolved": false,
+    "opened_at": "2026-10-13T12:56:35.018585+00:00"
   }
 ]
