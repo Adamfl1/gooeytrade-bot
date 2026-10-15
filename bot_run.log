@@ -6,9 +6,9 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'SEL amuse\nSL 4129.45 4\nTP 4070.02\n4 staus olD  “\ni\n1\n'
-  [OCR] Lines: ['SEL amuse', 'SL 4129.45 4', 'TP 4070.02', '4 staus olD  “', 'i', '1']
-  [OCR] Parsed: {'sl': 4129.45, 'tp': 4070.02, 'status': 'old'}
+  [OCR] Raw text: 'seu ase\nSL 412945 4\nTP 4070.02\n! | staus olD “\nj P\n'
+  [OCR] Lines: ['seu ase', 'SL 412945 4', 'TP 4070.02', '! | staus olD “', 'j P']
+  [OCR] Parsed: {'tp': 4070.02, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
        - Supertrend103
