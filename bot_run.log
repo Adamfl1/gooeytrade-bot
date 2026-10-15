@@ -6,7 +6,7 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'se ase\n\nSL 4129.45 4\n\nTP 4070.02,\nStatus OLD\n\n4\n\n7 7\n'
+  [OCR] Raw text: 'se ase\nSL 4129.45 4\nTP 4070.02,\nStatus OLD\n4\n7 7\n'
   [OCR] Lines: ['se ase', 'SL 4129.45 4', 'TP 4070.02,', 'Status OLD', '4', '7 7']
   [OCR] Parsed: {'sl': 4129.45, 'tp': 4070.02, 'status': 'old'}
   [TV] Labels found: 5
