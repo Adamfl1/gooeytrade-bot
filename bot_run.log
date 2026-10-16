@@ -6,7 +6,7 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 4159.71\nskoaisa\nTP 4182.2 4\nStatus OLD\n4\n'
+  [OCR] Raw text: 'BUY 4159.71\nskoaisa\nTP 4182.2 4\n\nStatus OLD\n4\n'
   [OCR] Lines: ['BUY 4159.71', 'skoaisa', 'TP 4182.2 4', 'Status OLD', '4']
   [OCR] Parsed: {'direction': 'buy', 'entry_price': 4159.71, 'tp': 4182.2, 'status': 'old'}
   [TV] Labels found: 5
