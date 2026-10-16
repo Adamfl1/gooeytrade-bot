@@ -6,8 +6,8 @@
 ============================================================
 
   [TV] Scraping: https://www.tradingview.com/chart/k6hILD7L/?symbol=OANDA%3AXAUUSD
-  [OCR] Raw text: 'BUY 415971,\n\nSL 4152.21\n\nte ate2\n\nStatus olD 4\nym\n'
-  [OCR] Lines: ['BUY 415971,', 'SL 4152.21', 'te ate2', 'Status olD 4', 'ym']
+  [OCR] Raw text: 'BUY 415971,\nSL 4152.21\nte ate2\nStatus olD 4\n'
+  [OCR] Lines: ['BUY 415971,', 'SL 4152.21', 'te ate2', 'Status olD 4']
   [OCR] Parsed: {'sl': 4152.21, 'status': 'old'}
   [TV] Labels found: 5
        - ATR14RMA1.5highlow
